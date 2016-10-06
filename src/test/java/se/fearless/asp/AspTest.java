@@ -12,7 +12,7 @@ public class AspTest {
 
 	@Before
 	public void setUp() throws Exception {
-		asp = new Asp<>();
+		asp = new Asp<>(-1024, -1024, -1024, 1024, 1024, 1024);
 	}
 
 	@Test
