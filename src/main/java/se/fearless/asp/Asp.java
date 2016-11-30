@@ -3,7 +3,6 @@ package se.fearless.asp;
 import javafx.geometry.Point3D;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Asp<T> {
@@ -15,7 +14,7 @@ public class Asp<T> {
 
 	public Iterable<T> findIntersecting(double x, double y, double z, double radius) {
 		List<T> result = new ArrayList<T>();
-		root.addIntersectingToList(x, y, z, radius, result);
+		root.addIntersectingToList(new Point3D(x, y, z), radius, result);
 		return result;
 	}
 

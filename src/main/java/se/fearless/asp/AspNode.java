@@ -3,7 +3,9 @@ package se.fearless.asp;
 import javafx.geometry.Point3D;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /*
                 +----------------+
@@ -11,23 +13,23 @@ import java.util.List;
               /----------------/ |
              /                /  |
             /                /   |
-		     +----------------+ y  |
+		     +----------------+ +y |
 		     |                |    |
 		     |                |    |
 		     |                |    |
-		     |                |    + z
+		     |                |    + +z
 		     |                |   /
 		     |                |  /
 		     |                | /
 		     |                |/
-		 -x  +----------------+  +x
+		 -x  +----------------+  +x -y -z
 
 */
 
 public class AspNode<T> {
 	private final List<Entry<T>> nodes = new ArrayList<>();
 	private final AspNode<T>[] children = new AspNode[8];
-	Box bounds;
+	private Box bounds;
 	private static final int NUMBER_OF_OBJECTS_BEFORE_SPLIT = 3;
 
 	public AspNode(Point3D a, Point3D b) {
@@ -85,8 +87,15 @@ public class AspNode<T> {
 		return child;
 	}
 
-	public void addIntersectingToList(double x, double y, double z, double radius, List<T> result) {
-		nodes.stream().map(Entry::getValue).forEachOrdered(result::add);
+	public void addIntersectingToList(Point3D position, double radius, List<T> result) {
+		//iterera alla oktanter som täcks. Kolla även i den här
+		Arrays.stream(children).filter(Objects::nonNull).forEach(child -> {
+			boolean sphereInside = child.bounds.isSphereInside(position.getX(), position.getY(), position.getZ(), radius);
+			if (sphereInside) {
+				child.addIntersectingToList(position, radius, result);
+			}
+		});
+		nodes.stream().filter(entry -> entry.getPosition().distance(position) <= radius).map(Entry::getValue).forEachOrdered(result::add);
 	}
 
 	public int getNumberOfChildNodes() {

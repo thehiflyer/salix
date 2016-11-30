@@ -111,4 +111,24 @@ public class BoxTest {
 
 		assertEquals(new Point3D(0, 0, 0), center);
 	}
+
+	@Test
+	public void sphereIntersectsTopFace() throws Exception {
+		assertTrue(collisions.isSphereIntersecting(0, 0, 9, 2));
+		assertFalse(collisions.isSphereInside(0, 0, 9, 2));
+	}
+
+	@Test
+	public void sphereIntersectsBottomFace() throws Exception {
+		assertTrue(collisions.isSphereIntersecting(0, 0, -9, 2));
+		assertFalse(collisions.isSphereInside(0, 0, -9, 2));
+	}
+
+	@Test
+	public void sphereDoesNotIntersectWhenOutside() throws Exception {
+		assertFalse(collisions.isSphereIntersecting(0, 0, -13, 2));
+	}
+
+
+
 }
