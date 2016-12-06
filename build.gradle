@@ -1,3 +1,8 @@
+plugins {
+    id "com.ofg.uptodate" version "1.1.0"
+    id 'me.champeau.gradle.jmh' version '0.3.0'
+}
+
 group 'se.fearless'
 version '1.0-SNAPSHOT'
 
@@ -7,6 +12,20 @@ task wrapper(type: Wrapper) {
 }
 
 apply plugin: 'java'
+apply plugin: 'me.champeau.gradle.jmh'
+
+jmh {
+    include = '.*SearchPerformance.*'
+    //include '.*'
+    jmhVersion = '1.12'
+    warmupIterations = 8
+    iterations = 5
+    fork = 3
+    timeUnit = 'ns'
+    forceGC = true // Should JMH force GC between iterations?
+    jvmArgs = "-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=60s,filename=myrecording.jfr -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints"
+    //jvmArgs = '-XX:+UseG1GC'
+}
 
 sourceCompatibility = 1.8
 
@@ -17,4 +36,17 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'com.google.guava', name: 'guava', version: '18.0'
+    jmh 'org.hdrhistogram:HdrHistogram:2.1.8'
+}
+
+ext {
+    javaCompilerExecutable = System.env['JAVA_HOME'] ? System.env['JAVA_HOME'] + '/bin/javac' : 'javac'
+}
+
+compileJmhJava {
+    options.compilerArgs << '-XDignore.symbol.file'
+    options.fork = true
+    options.debug = true
+    options.forkOptions.executable = javaCompilerExecutable
+    options.warnings = false
 }

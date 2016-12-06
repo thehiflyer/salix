@@ -21,4 +21,8 @@ public class Asp<T> {
 	public void add(T entry, double x, double y, double z, double radius) {
 		root.add(new Entry<>(entry, x, y, z, radius));
 	}
+
+	public int getNumberOfChildNodes() {
+		return root.getNumberOfChildNodes();
+	}
 }
