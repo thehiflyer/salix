@@ -41,7 +41,6 @@ public class AspNode<T> {
 			List<Entry<T>> toKeep = new ArrayList<>();
 			for (Entry<T> node : nodes) {
 				addToChildOrList(toKeep, node);
-
 			}
 			addToChildOrList(toKeep, entry);
 
@@ -88,10 +87,9 @@ public class AspNode<T> {
 	}
 
 	public void addIntersectingToList(Point3D position, double radius, List<T> result) {
-		//iterera alla oktanter som täcks. Kolla även i den här
 		Arrays.stream(children).filter(Objects::nonNull).forEach(child -> {
-			boolean sphereInside = child.bounds.isSphereInside(position.getX(), position.getY(), position.getZ(), radius);
-			if (sphereInside) {
+			boolean sphereIsOutside = child.bounds.isSphereOutside(position.getX(), position.getY(), position.getZ(), radius);
+			if (!sphereIsOutside) {
 				child.addIntersectingToList(position, radius, result);
 			}
 		});

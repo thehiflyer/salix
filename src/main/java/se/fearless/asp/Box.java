@@ -84,6 +84,10 @@ public class Box {
 		return false;
 	}
 
+	public boolean isSphereOutside(double x, double y, double z, double radius) {
+		return !(isSphereInside(x, y, z, radius) || isSphereIntersecting(x, y, z, radius));
+	}
+
 	public Point3D getCenter() {
 		return center;
 	}

@@ -48,7 +48,10 @@ public class AspTest {
 
 		Iterable<String> intersecting = asp.findIntersecting(100, 100, 100, 20);
 		assertEquals(5, Iterables.size(intersecting));
-		List<String> expected = Lists.newArrayList("c1", "c2", "c3", "c4", "c5");
-		assertTrue(Iterables.elementsEqual(expected, intersecting));
+		Iterables.contains(intersecting, "c1");
+		Iterables.contains(intersecting, "c2");
+		Iterables.contains(intersecting, "c3");
+		Iterables.contains(intersecting, "c4");
+		Iterables.contains(intersecting, "c5");
 	}
 }
