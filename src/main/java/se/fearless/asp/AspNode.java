@@ -3,9 +3,7 @@ package se.fearless.asp;
 import javafx.geometry.Point3D;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /*
                 +----------------+
@@ -87,14 +85,22 @@ public class AspNode<T> {
 	}
 
 	public void addIntersectingToList(Point3D position, double radius, List<T> result) {
-		Arrays.stream(children).filter(Objects::nonNull).forEach(child -> {
-			boolean sphereIsOutside = child.bounds.isSphereOutside(position.getX(), position.getY(), position.getZ(), radius);
-			if (!sphereIsOutside) {
-				child.addIntersectingToList(position, radius, result);
+		for (int i = 0; i < children.length; i++) {
+			AspNode<T> child = children[i];
+			if (child != null) {
+				boolean sphereIsOutside = child.bounds.isSphereOutside(position.getX(), position.getY(), position.getZ(), radius);
+				if (!sphereIsOutside) {
+					child.addIntersectingToList(position, radius, result);
+				}
 			}
-		});
-		nodes.stream().filter(entry -> entry.getPosition().distance(position) <= radius).map(Entry::getValue).forEachOrdered(result::add);
+		}
+		for (Entry<T> node : nodes) {
+			if (node.getPosition().distance(position) <= radius) {
+				result.add(node.getValue());
+			}
+		}
 	}
+
 
 	public int getNumberOfChildNodes() {
 		int sum = 0;

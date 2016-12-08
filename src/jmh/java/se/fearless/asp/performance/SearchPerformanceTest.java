@@ -34,7 +34,7 @@ public class SearchPerformanceTest {
 
 	@Benchmark
 	@BenchmarkMode(Mode.SampleTime)
-	public Iterable<String> addNodes() {
+	public Iterable<String> search() {
 		Iterable<String> intersecting = null;
 		for (int i = 0; i < NUMBER_OF_SEARCHES; i++) {
 			int offset = 3 * NUMBER_OF_ENTRIES_TO_ADD + i * 3;
