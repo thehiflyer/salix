@@ -32,7 +32,7 @@ public class Entry<T> {
 		updateIntersectionOfNodeBounds();
 	}
 
-	private void updateIntersectionOfNodeBounds() {
+	public void updateIntersectionOfNodeBounds() {
 		intersectsNodeBounds = currentNode.isIntersectingSplitPlanes(position.getX(), position.getY(), position.getZ(), radius);
 	}
 

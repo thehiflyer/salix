@@ -46,7 +46,7 @@ public class AspNode<T> {
 					if (!added) {
 
 						toKeep.add(existingEntry);
-						existingEntry.updateNode(this);
+						existingEntry.updateIntersectionOfNodeBounds();
 					}
 				}
 			}
