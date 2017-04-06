@@ -101,4 +101,12 @@ public class Box {
 	}
 
 
+	@Override
+	public String toString() {
+		return "Box{" +
+				"a=" + a +
+				", b=" + b +
+				", center=" + center +
+				'}';
+	}
 }

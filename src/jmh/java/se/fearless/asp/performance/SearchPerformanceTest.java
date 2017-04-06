@@ -21,7 +21,7 @@ public class SearchPerformanceTest {
 
 	@Setup(Level.Trial)
 	public void setUp() {
-		asp = new Asp<>(MIN_BOUND, MIN_BOUND, MIN_BOUND, MAX_BOUND, MAX_BOUND, MAX_BOUND);
+		asp = new Asp<>(MIN_BOUND, MIN_BOUND, MIN_BOUND, MAX_BOUND, MAX_BOUND, MAX_BOUND, 3);
 		random = new Random(974612);
 
 		DoubleStream doubles = random.doubles(3 * (NUMBER_OF_ENTRIES_TO_ADD + NUMBER_OF_SEARCHES), MIN_BOUND, MAX_BOUND);

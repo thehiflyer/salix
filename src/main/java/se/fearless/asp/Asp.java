@@ -12,8 +12,8 @@ public class Asp<T> {
 	private final AspNode<T> root;
 	private final Map<T, Entry<T>> entryLookup = new ConcurrentHashMap<>();
 
-	public Asp(double x1, double y1, double z1, double x2, double y2, double z2) {
-		root = new AspNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2));
+	public Asp(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold) {
+		root = new AspNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold);
 	}
 
 	public Collection<T> findIntersecting(double x, double y, double z, double radius) {
@@ -36,8 +36,9 @@ public class Asp<T> {
 		Entry<T> internalEntry = entryLookup.get(entry);
 		AspNode<T> currentNode = internalEntry.getNode();
 		if (currentNode.isWithinBounds(x, y, z, internalEntry.getRadius())) {
-			internalEntry.updatePosition(x, y, z);
+			currentNode.updateNodeAndPositionForEntry(internalEntry, x, y, z);
 			return;
 		}
+		root.updateNodeAndPositionForEntry(internalEntry, x, y, z);
 	}
 }

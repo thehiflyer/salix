@@ -25,27 +25,37 @@ import java.util.List;
 */
 
 public class AspNode<T> {
-	private final List<Entry<T>> nodes = new ArrayList<>();
-	private final AspNode<T>[] children = new AspNode[8];
+	private final List<Entry<T>> entries = new ArrayList<>();
+	private final AspNode<T>[] childNodes = new AspNode[8];
 	private Box bounds;
-	private static final int NUMBER_OF_OBJECTS_BEFORE_SPLIT = 3;
+	private final int splitThreshold;
 
-	public AspNode(Point3D a, Point3D b) {
+	public AspNode(Point3D a, Point3D b, int splitThreshold) {
 		bounds = new Box(a, b);
+		this.splitThreshold = splitThreshold;
 	}
 
 	public void add(Entry<T> entry) {
-		if (nodes.size() >= NUMBER_OF_OBJECTS_BEFORE_SPLIT) {
+		if (entries.size() >= splitThreshold) {
 			List<Entry<T>> toKeep = new ArrayList<>();
-			for (Entry<T> node : nodes) {
-				addToChildOrList(toKeep, node);
+			for (Entry<T> existingEntry : entries) {
+				if (existingEntry.isIntersectsNodeBounds()) {
+					toKeep.add(existingEntry);
+				} else {
+					boolean added = addToChildNode(existingEntry);
+					if (!added) {
+
+						toKeep.add(existingEntry);
+						existingEntry.updateNode(this);
+					}
+				}
 			}
 			addToChildOrList(toKeep, entry);
 
-			nodes.clear();
-			nodes.addAll(toKeep);
+			entries.clear();
+			entries.addAll(toKeep);
 		} else {
-			nodes.add(entry);
+			entries.add(entry);
 			entry.updateNode(this);
 		}
 	}
@@ -58,27 +68,30 @@ public class AspNode<T> {
 	}
 
 	private boolean addToChildNode(Entry<T> entry) {
-		Point3D mid = entry.getPosition();
-		boolean left = mid.getX() - bounds.getCenter().getX() < 0;
-		boolean top = mid.getY() - bounds.getCenter().getY() > 0;
-		boolean front = mid.getZ() - bounds.getCenter().getZ() < 0;
-
-		Octant octant = Octant.mapOctant(left, top, front);
-		Box octantBounds = octant.createBounds(bounds);
 		Point3D position = entry.getPosition();
+		Octant octant = getOctant(position.getX(), position.getY(), position.getZ());
+		Box octantBounds = octant.createBounds(bounds);
 		if (octantBounds.isSphereInside(position.getX(), position.getY(), position.getZ(), entry.getRadius())) {
-			if (children[octant.getIndex()] == null) {
-				children[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB());
+			if (childNodes[octant.getIndex()] == null) {
+				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold);
 			}
-			children[octant.getIndex()].add(entry);
+			childNodes[octant.getIndex()].add(entry);
 			return true;
 		}
 		return false;
 	}
 
+	private Octant getOctant(double x, double y, double z) {
+		boolean left = x - bounds.getCenter().getX() < 0;
+		boolean top = y - bounds.getCenter().getY() > 0;
+		boolean front = z - bounds.getCenter().getZ() < 0;
+
+		return Octant.mapOctant(left, top, front);
+	}
+
 
 	public AspNode<T> getChildNode(Octant octant) {
-		AspNode<T> child = children[octant.getIndex()];
+		AspNode<T> child = childNodes[octant.getIndex()];
 		if (child == null) {
 			return EMPTY_NODE;
 		}
@@ -86,8 +99,8 @@ public class AspNode<T> {
 	}
 
 	public void addIntersectingToList(Point3D position, double radius, List<T> result) {
-		for (int i = 0; i < children.length; i++) {
-			AspNode<T> child = children[i];
+		for (int i = 0; i < childNodes.length; i++) {
+			AspNode<T> child = childNodes[i];
 			if (child != null) {
 				boolean sphereIsOutside = child.bounds.isSphereOutside(position.getX(), position.getY(), position.getZ(), radius);
 				if (!sphereIsOutside) {
@@ -95,7 +108,7 @@ public class AspNode<T> {
 				}
 			}
 		}
-		for (Entry<T> node : nodes) {
+		for (Entry<T> node : entries) {
 			if (node.getPosition().distance(position) <= radius) {
 				result.add(node.getValue());
 			}
@@ -105,23 +118,56 @@ public class AspNode<T> {
 
 	public int getNumberOfChildNodes() {
 		int sum = 0;
-		for (AspNode<T> child : children) {
+		for (AspNode<T> child : childNodes) {
 			if (child != null) {
 				sum++;
+				sum += child.getNumberOfChildNodes();
 			}
 		}
 		return sum;
 	}
 
-	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0)) {
+	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0) {
 		@Override
 		public int getNumberOfChildNodes() {
 			return 0;
 		}
 	};
 
-	public boolean isWithinBounds(int x, int y, int z, double radius) {
+	public boolean isWithinBounds(double x, double y, double z, double radius) {
 		return bounds.isSphereInside(x, y, z, radius);
+	}
+
+	public boolean isIntersectingSplitPlanes(double x, double y, double z, double radius) {
+		for (AspNode<T> node : childNodes) {
+			if (node != null) {
+				boolean sphereIntersecting = node.bounds.isSphereIntersecting(x, y, z, radius);
+				if (sphereIntersecting) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public void updateNodeAndPositionForEntry(Entry<T> entry, double x, double y, double z) {
+		Octant octant = getOctant(x, y, z);
+		AspNode<T> childNode = getChildNode(octant);
+		if (childNode != EMPTY_NODE) {
+			childNode.updateNodeAndPositionForEntry(entry, x, y, z);
+		} else {
+			if (childNode == entry.getNode()) {
+				entry.updatePosition(x, y, z);
+			} else {
+				entry.getNode().remove(entry);
+				entry.updatePosition(x, y, z);
+				add(entry);
+			}
+		}
+	}
+
+	private void remove(Entry<T> entry) {
+		entries.remove(entry);
 	}
 }
 

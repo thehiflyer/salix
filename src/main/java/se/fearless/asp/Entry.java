@@ -7,6 +7,7 @@ public class Entry<T> {
 	private Point3D position;
 	private final double radius;
 	private AspNode<T> currentNode;
+	private boolean intersectsNodeBounds = false;
 
 	public Entry(T value, double x, double y, double z, double radius) {
 		this.value = value;
@@ -26,19 +27,34 @@ public class Entry<T> {
 		return radius;
 	}
 
-	public void updateNode(AspNode<T> node, double x, double y, double z) {
-
-	}
-
 	public void updateNode(AspNode<T> node) {
 		this.currentNode = node;
+		updateIntersectionOfNodeBounds();
+	}
+
+	private void updateIntersectionOfNodeBounds() {
+		intersectsNodeBounds = currentNode.isIntersectingSplitPlanes(position.getX(), position.getY(), position.getZ(), radius);
 	}
 
 	public AspNode<T> getNode() {
 		return currentNode;
 	}
 
-	public void updatePosition(int x, int y, int z) {
+	public void updatePosition(double x, double y, double z) {
 		position = new Point3D(x, y, z);
+		updateIntersectionOfNodeBounds();
+	}
+
+	public boolean isIntersectsNodeBounds() {
+		return intersectsNodeBounds;
+	}
+
+	@Override
+	public String toString() {
+		return "Entry{" +
+				"value=" + value +
+				", position=" + position +
+				", intersectsNodeBounds=" + intersectsNodeBounds +
+				'}';
 	}
 }

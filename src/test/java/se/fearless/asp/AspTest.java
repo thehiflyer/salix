@@ -1,11 +1,11 @@
 package se.fearless.asp;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -17,7 +17,7 @@ public class AspTest {
 
 	@Before
 	public void setUp() throws Exception {
-		asp = new Asp<>(-1024, -1024, -1024, 1024, 1024, 1024);
+		asp = new Asp<>(-1024, -1024, -1024, 1024, 1024, 1024, 15);
 	}
 
 	@Test
@@ -63,5 +63,66 @@ public class AspTest {
 		assertThat(intersecting).isEmpty();
 	}
 
+	@Test
+	public void addOneElementAndThenMoveItWillMakeItBeFoundAtTheNewPosition() throws Exception {
+		asp.add("waldo", 100, 100, 100, 5);
+		asp.move("waldo", 0, -100, 0);
 
+		Collection<String> intersecting = asp.findIntersecting(0, -105, 0, 20);
+
+		assertThat(intersecting).hasSize(1).contains("waldo");
+	}
+
+	@Test
+	public void addFiveElementsAndThenMoveAwayOneWillResultInFourFoundAtTheOldLocation() throws Exception {
+		asp.add("c1", 105, 97, 102, 2);
+		asp.add("c2", 95, 97, 102, 2);
+		asp.add("c3", 105, 104, 102, 2);
+		asp.add("c4", 105, 100, 93, 2);
+		asp.add("c5", 101, 97, 96, 2);
+
+		asp.move("c4", -100, -100, -100);
+
+		Collection<String> intersecting = asp.findIntersecting(100, 100, 100, 20);
+
+		assertThat(intersecting).hasSize(4).doesNotContain("c4");
+	}
+
+	@Test
+	public void addFiveElementsAndThenMoveAwayOneWillResultInOneFoundAtTheNewLocation() throws Exception {
+		asp.add("c1", 105, 97, 102, 2);
+		asp.add("c2", 95, 97, 102, 2);
+		asp.add("c3", 105, 104, 102, 2);
+		asp.add("c4", 105, 100, 93, 2);
+		asp.add("c5", 101, 97, 96, 2);
+
+		asp.move("c4", -100, -100, -100);
+
+		Collection<String> intersecting = asp.findIntersecting(-100, -100, -100, 20);
+
+		assertThat(intersecting).hasSize(1).contains("c4");
+	}
+
+	@Test
+	public void movingAnEntryThroughAWorldFullOfStaticEntriesFindsItAllTheWay() throws Exception {
+		long seed = System.currentTimeMillis();
+
+		Random random = new Random(seed);
+		for (int i = 0; i < 100000; i++) {
+			asp.add("" + i, getRandom(random), getRandom(random), getRandom(random), 10);
+		}
+
+		int halfExtent = 1000;
+		asp.add("waldo", -halfExtent, -halfExtent, -halfExtent, 10);
+
+		for (int i = 0; i < halfExtent * 2; i++) {
+			asp.move("waldo", -halfExtent + i, -halfExtent + i, -halfExtent + i);
+			Collection<String> intersecting = asp.findIntersecting(-halfExtent + i, -halfExtent + i, -halfExtent + i, 50);
+			assertThat(intersecting).contains("waldo").withFailMessage("Seed: " + seed);
+		}
+	}
+
+	private int getRandom(Random random) {
+		return random.nextInt(2000) - 1000;
+	}
 }
