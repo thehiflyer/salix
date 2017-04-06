@@ -7,7 +7,9 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AspTest {
 
@@ -47,11 +49,19 @@ public class AspTest {
 		asp.add("f5", 401, -207, -196, 2);
 
 		Iterable<String> intersecting = asp.findIntersecting(100, 100, 100, 20);
-		assertEquals(5, Iterables.size(intersecting));
-		Iterables.contains(intersecting, "c1");
-		Iterables.contains(intersecting, "c2");
-		Iterables.contains(intersecting, "c3");
-		Iterables.contains(intersecting, "c4");
-		Iterables.contains(intersecting, "c5");
+
+		assertThat(intersecting).hasSize(5).contains("c1", "c2", "c3", "c4", "c5");
 	}
+
+	@Test
+	public void addOneElementAndThenMoveItAwayWillFindNothing() throws Exception {
+		asp.add("waldo", 100, 100, 100, 5);
+		asp.move("waldo", 0, -100, 0);
+
+		Iterable<String> intersecting = asp.findIntersecting(100, 100, 100, 20);
+
+		assertThat(intersecting).isEmpty();
+	}
+
+
 }

@@ -46,6 +46,7 @@ public class AspNode<T> {
 			nodes.addAll(toKeep);
 		} else {
 			nodes.add(entry);
+			entry.updateNode(this);
 		}
 	}
 
@@ -118,5 +119,9 @@ public class AspNode<T> {
 			return 0;
 		}
 	};
+
+	public boolean isWithinBounds(int x, int y, int z, double radius) {
+		return bounds.isSphereInside(x, y, z, radius);
+	}
 }
 
