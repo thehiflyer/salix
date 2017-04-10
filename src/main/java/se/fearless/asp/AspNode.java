@@ -70,7 +70,7 @@ public class AspNode<T> {
 	private boolean addToChildNode(Entry<T> entry) {
 		Point3D position = entry.getPosition();
 		Octant octant = getOctant(position.getX(), position.getY(), position.getZ());
-		Box octantBounds = octant.createBounds(bounds);
+		Box octantBounds = getOctantBounds(octant);
 		if (octantBounds.isSphereInside(position.getX(), position.getY(), position.getZ(), entry.getRadius())) {
 			if (childNodes[octant.getIndex()] == null) {
 				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold);
@@ -79,6 +79,13 @@ public class AspNode<T> {
 			return true;
 		}
 		return false;
+	}
+
+	private Box getOctantBounds(Octant octant) {
+		if (childNodes[octant.getIndex()] != null) {
+			return childNodes[octant.getIndex()].bounds;
+		}
+		return octant.createBounds(bounds);
 	}
 
 	private Octant getOctant(double x, double y, double z) {

@@ -33,7 +33,9 @@ public class Entry<T> {
 	}
 
 	public void updateIntersectionOfNodeBounds() {
-		intersectsNodeBounds = currentNode.isIntersectingSplitPlanes(position.getX(), position.getY(), position.getZ(), radius);
+		if (currentNode != null) {
+			intersectsNodeBounds = currentNode.isIntersectingSplitPlanes(position.getX(), position.getY(), position.getZ(), radius);
+		}
 	}
 
 	public AspNode<T> getNode() {
