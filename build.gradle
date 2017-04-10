@@ -15,7 +15,7 @@ apply plugin: 'java'
 apply plugin: 'me.champeau.gradle.jmh'
 
 jmh {
-    include = 'PerformanceTest.addNodes'
+    include = 'SearchPerformanceTest.search'
     //include '.*'
     jmhVersion = '1.12'
     warmupIterations = 8

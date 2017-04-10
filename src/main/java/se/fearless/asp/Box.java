@@ -10,26 +10,26 @@ public class Box {
 	private final Point3D a;
 	private final Point3D b;
 	private final Point3D center;
-	private final Map<Face, Plane> planes = new EnumMap<>(Face.class);
+	private final Plane[] planes = new Plane[6];
 
 	public Box(Point3D a, Point3D b) {
 		this.a = new Point3D(Math.min(a.getX(), b.getX()), Math.min(a.getY(), b.getY()), Math.min(a.getZ(), b.getZ()));
 		this.b = new Point3D(Math.max(a.getX(), b.getX()), Math.max(a.getY(), b.getY()), Math.max(a.getZ(), b.getZ()));
 		Point3D size = b.subtract(a);
 		center = a.add(size.multiply(0.5));
-		planes.put(Face.RIGHT, new Plane(b, new Point3D(1, 0, 0)));
-		planes.put(Face.LEFT, new Plane(a, new Point3D(-1, 0, 0)));
-		planes.put(Face.TOP, new Plane(b, new Point3D(0, 0, 1)));
-		planes.put(Face.BOTTOM, new Plane(a, new Point3D(0, 0, -1)));
-		planes.put(Face.FRONT, new Plane(a, new Point3D(0, -1, 0)));
-		planes.put(Face.BACK, new Plane(b, new Point3D(0, 1, 0)));
+		planes[Face.RIGHT] = new Plane(b, new Point3D(1, 0, 0));
+		planes[Face.LEFT] = new Plane(a, new Point3D(-1, 0, 0));
+		planes[Face.TOP] = new Plane(b, new Point3D(0, 0, 1));
+		planes[Face.BOTTOM] = new Plane(a, new Point3D(0, 0, -1));
+		planes[Face.FRONT] = new Plane(a, new Point3D(0, -1, 0));
+		planes[Face.BACK] = new Plane(b, new Point3D(0, 1, 0));
 	}
 
 
 	boolean isSphereInside(double x, double y, double z, double radius) {
 		Point3D sphereCenter = new Point3D(x, y, z);
-		for (Plane plane : planes.values()) {
-			if (!plane.isSphereInside(sphereCenter, radius))  {
+		for (int i = 0; i < planes.length; i++) {
+			if (!planes[i].isSphereInside(sphereCenter, radius))  {
 				return false;
 			}
 		}
@@ -38,12 +38,12 @@ public class Box {
 
 	boolean isSphereIntersecting(double x, double y, double z, double radius) {
 		Point3D sphereCenter = new Point3D(x, y, z);
-		Plane left = planes.get(Face.LEFT);
-		Plane right = planes.get(Face.RIGHT);
-		Plane front = planes.get(Face.FRONT);
-		Plane back = planes.get(Face.BACK);
-		Plane top = planes.get(Face.TOP);
-		Plane bottom = planes.get(Face.BOTTOM);
+		Plane left = planes[Face.LEFT];
+		Plane right = planes[Face.RIGHT];
+		Plane front = planes[Face.FRONT];
+		Plane back = planes[Face.BACK];
+		Plane top = planes[Face.TOP];
+		Plane bottom = planes[Face.BOTTOM];
 		boolean in_left   = !left.isSphereOutside(sphereCenter, radius);
 		boolean in_right  = !right.isSphereOutside(sphereCenter, radius);
 		boolean in_front  = !front.isSphereOutside(sphereCenter, radius);

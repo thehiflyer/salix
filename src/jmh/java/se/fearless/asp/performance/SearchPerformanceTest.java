@@ -24,7 +24,7 @@ public class SearchPerformanceTest {
 		asp = new Asp<>(MIN_BOUND, MIN_BOUND, MIN_BOUND, MAX_BOUND, MAX_BOUND, MAX_BOUND, 3);
 		random = new Random(974612);
 
-		DoubleStream doubles = random.doubles(3 * (NUMBER_OF_ENTRIES_TO_ADD + NUMBER_OF_SEARCHES), MIN_BOUND, MAX_BOUND);
+		DoubleStream doubles = random.doubles(3 * (NUMBER_OF_ENTRIES_TO_ADD + NUMBER_OF_SEARCHES), MIN_BOUND + 20, MAX_BOUND - 20);
 		randomNumbers = doubles.toArray();
 		for (int i = 0; i < NUMBER_OF_ENTRIES_TO_ADD; i++) {
 			asp.add("entry" + i, randomNumbers[i], randomNumbers[i + NUMBER_OF_ENTRIES_TO_ADD], randomNumbers[i+ 2 * NUMBER_OF_ENTRIES_TO_ADD], 10);
