@@ -1,6 +1,8 @@
 package se.fearless.asp;
 
 import javafx.geometry.Point3D;
+import se.fearless.asp.metrics.Metrics;
+import se.fearless.asp.metrics.NoOpMetrics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,12 @@ import java.util.List;
 public class AspNode<T> {
 	private final List<Entry<T>> entries = new ArrayList<>();
 	private final AspNode<T>[] childNodes = new AspNode[8];
+	private final Metrics metrics;
 	private Box bounds;
 	private final int splitThreshold;
 
-	public AspNode(Point3D a, Point3D b, int splitThreshold) {
+	public AspNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics) {
+		this.metrics = metrics;
 		bounds = new Box(a, b);
 		this.splitThreshold = splitThreshold;
 	}
@@ -73,7 +77,7 @@ public class AspNode<T> {
 		Box octantBounds = getOctantBounds(octant);
 		if (octantBounds.isSphereInside(position.getX(), position.getY(), position.getZ(), entry.getRadius())) {
 			if (childNodes[octant.getIndex()] == null) {
-				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold);
+				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics);
 			}
 			childNodes[octant.getIndex()].add(entry);
 			return true;
@@ -134,7 +138,7 @@ public class AspNode<T> {
 		return sum;
 	}
 
-	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0) {
+	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics()) {
 		@Override
 		public int getNumberOfChildNodes() {
 			return 0;
