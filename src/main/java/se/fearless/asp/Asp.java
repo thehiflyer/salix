@@ -17,7 +17,7 @@ public class Asp<T> {
 
 	public Asp(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold, Metrics metrics) {
 		this.metrics = metrics;
-		root = new AspNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold, metrics);
+		root = new AspNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold, metrics, "root");
 	}
 
 	public Asp(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold) {
@@ -36,13 +36,13 @@ public class Asp<T> {
 	}
 
 	public void add(T entry, double x, double y, double z, double radius) {
-		metrics.onAddBegin();
+		metrics.onAddEntryBegin();
 		try {
 			Entry<T> internalEntry = new Entry<>(entry, x, y, z, radius);
 			root.add(internalEntry);
 			entryLookup.put(entry, internalEntry);
 		} finally {
-			metrics.onAddEnd();
+			metrics.onAddEntryEnd();
 		}
 	}
 
@@ -51,7 +51,7 @@ public class Asp<T> {
 	}
 
 	public void move(T entry, double x, double y, double z) {
-		metrics.onMoveBegin();
+		metrics.onMoveEntryBegin();
 		try {
 			Entry<T> internalEntry = entryLookup.get(entry);
 			AspNode<T> currentNode = internalEntry.getNode();
@@ -61,7 +61,7 @@ public class Asp<T> {
 			}
 			root.updateNodeAndPositionForEntry(internalEntry, x, y, z);
 		} finally {
-			metrics.onMoveEnd();
+			metrics.onMoveEntryEnd();
 		}
 	}
 }

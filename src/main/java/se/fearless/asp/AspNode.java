@@ -30,17 +30,20 @@ public class AspNode<T> {
 	private final List<Entry<T>> entries = new ArrayList<>();
 	private final AspNode<T>[] childNodes = new AspNode[8];
 	private final Metrics metrics;
+	private final String name;
 	private Box bounds;
 	private final int splitThreshold;
 
-	public AspNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics) {
+	public AspNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics, String name) {
 		this.metrics = metrics;
 		bounds = new Box(a, b);
 		this.splitThreshold = splitThreshold;
+		this.name = name;
 	}
 
 	public void add(Entry<T> entry) {
 		if (entries.size() >= splitThreshold) {
+			metrics.onSplitAttemptBegin(this);
 			List<Entry<T>> toKeep = new ArrayList<>();
 			for (Entry<T> existingEntry : entries) {
 				if (existingEntry.isIntersectsNodeBounds()) {
@@ -58,6 +61,7 @@ public class AspNode<T> {
 
 			entries.clear();
 			entries.addAll(toKeep);
+			metrics.onSplitAttemptEnd(this);
 		} else {
 			entries.add(entry);
 			entry.updateNode(this);
@@ -77,12 +81,17 @@ public class AspNode<T> {
 		Box octantBounds = getOctantBounds(octant);
 		if (octantBounds.isSphereInside(position.getX(), position.getY(), position.getZ(), entry.getRadius())) {
 			if (childNodes[octant.getIndex()] == null) {
-				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics);
+				metrics.onNodeChildCreation();
+				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics, buildName(name, octant));
 			}
 			childNodes[octant.getIndex()].add(entry);
 			return true;
 		}
 		return false;
+	}
+
+	private String buildName(String name, Octant octant) {
+		return name + "." + octant.name();
 	}
 
 	private Box getOctantBounds(Octant octant) {
@@ -138,7 +147,7 @@ public class AspNode<T> {
 		return sum;
 	}
 
-	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics()) {
+	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY") {
 		@Override
 		public int getNumberOfChildNodes() {
 			return 0;
@@ -179,6 +188,12 @@ public class AspNode<T> {
 
 	private void remove(Entry<T> entry) {
 		entries.remove(entry);
+	}
+
+	@Override
+	public String toString() {
+		return name + '\'' +
+				", bounds=" + bounds;
 	}
 }
 

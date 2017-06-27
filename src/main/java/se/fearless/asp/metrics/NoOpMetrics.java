@@ -1,23 +1,25 @@
 package se.fearless.asp.metrics;
 
+import se.fearless.asp.AspNode;
+
 public class NoOpMetrics implements Metrics {
 	@Override
-	public void onAddBegin() {
+	public void onAddEntryBegin() {
 
 	}
 
 	@Override
-	public void onAddEnd() {
+	public void onAddEntryEnd() {
 
 	}
 
 	@Override
-	public void onMoveBegin() {
+	public void onMoveEntryBegin() {
 
 	}
 
 	@Override
-	public void onMoveEnd() {
+	public void onMoveEntryEnd() {
 
 	}
 
@@ -28,6 +30,21 @@ public class NoOpMetrics implements Metrics {
 
 	@Override
 	public void onFindEnd() {
+
+	}
+
+	@Override
+	public <T> void onSplitAttemptBegin(AspNode<T> node) {
+
+	}
+
+	@Override
+	public <T> void onSplitAttemptEnd(AspNode<T> node) {
+
+	}
+
+	@Override
+	public void onNodeChildCreation() {
 
 	}
 }

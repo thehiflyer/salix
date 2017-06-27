@@ -3,6 +3,7 @@ package se.fearless.asp;
 import com.google.common.collect.Iterables;
 import org.junit.Before;
 import org.junit.Test;
+import se.fearless.asp.metrics.CountingMetrics;
 
 import java.util.Collection;
 import java.util.Random;
@@ -14,10 +15,12 @@ import static org.junit.Assert.assertTrue;
 public class AspTest {
 
 	private Asp<String> asp;
+	private CountingMetrics metrics;
 
 	@Before
 	public void setUp() throws Exception {
-		asp = new Asp<>(-1024, -1024, -1024, 1024, 1024, 1024, 15);
+		metrics = new CountingMetrics();
+		asp = new Asp<>(-1024, -1024, -1024, 1024, 1024, 1024, 30, metrics);
 	}
 
 	@Test
@@ -135,9 +138,10 @@ public class AspTest {
 		for (int i = 0; i < 30000; i++) {
 			long start = System.nanoTime();
 			asp.add("" + i, getRandom(random), getRandom(random), getRandom(random), 10);
-			System.out.println(i + "\t" + (System.nanoTime() - init));
 		}
-		//System.out.println("1 - " + (System.currentTimeMillis() - init));
+
+		System.out.println(asp.getNumberOfChildNodes());
+		System.out.println(metrics);
 	}
 
 	private int getRandom(Random random) {

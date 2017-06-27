@@ -1,12 +1,19 @@
 package se.fearless.asp.metrics;
 
-public interface Metrics {
-	void onAddBegin();
-	void onAddEnd();
+import se.fearless.asp.AspNode;
 
-	void onMoveBegin();
-	void onMoveEnd();
+public interface Metrics {
+	void onAddEntryBegin();
+	void onAddEntryEnd();
+
+	void onMoveEntryBegin();
+	void onMoveEntryEnd();
 
 	void onFindBegin();
 	void onFindEnd();
+
+	<T> void onSplitAttemptBegin(AspNode<T> node);
+	<T> void onSplitAttemptEnd(AspNode<T> node);
+
+	void onNodeChildCreation();
 }
