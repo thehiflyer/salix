@@ -42,4 +42,25 @@ public class SearchPerformanceTest {
 		}
 		return intersecting;
 	}
+
+	@Benchmark
+	@BenchmarkMode(Mode.SampleTime)
+	public Iterable<String> moving() {
+		Iterable<String> intersecting = null;
+		for (int i = 0; i < NUMBER_OF_SEARCHES; i++) {
+			int offset = 3 * NUMBER_OF_ENTRIES_TO_ADD + i * 3;
+			int index = random.nextInt(NUMBER_OF_ENTRIES_TO_ADD);
+
+			try {
+				asp.move("entry" + index, randomNumbers[offset], randomNumbers[offset + 1], randomNumbers[offset + 2]);
+			} catch (Exception e) {
+				System.out.println("Index " + index + " moved to " + randomNumbers[offset] + ", " + randomNumbers[offset + 1] + ", " + randomNumbers[offset + 2]);
+			}
+
+		}
+		intersecting = asp.findIntersecting(randomNumbers[random.nextInt(randomNumbers.length)], randomNumbers[random.nextInt(randomNumbers.length)], randomNumbers[random.nextInt(randomNumbers.length)], 150);
+		System.out.println(asp.getNumberOfChildNodes());
+		return intersecting;
+	}
+
 }

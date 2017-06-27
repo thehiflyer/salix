@@ -32,7 +32,7 @@ public class Asp<T> {
 		return root.getNumberOfChildNodes();
 	}
 
-	public void move(T entry, int x, int y, int z) {
+	public void move(T entry, double x, double y, double z) {
 		Entry<T> internalEntry = entryLookup.get(entry);
 		AspNode<T> currentNode = internalEntry.getNode();
 		if (currentNode.isWithinBounds(x, y, z, internalEntry.getRadius())) {

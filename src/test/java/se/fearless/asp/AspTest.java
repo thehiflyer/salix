@@ -111,6 +111,8 @@ public class AspTest {
 		for (int i = 0; i < 100000; i++) {
 			asp.add("" + i, getRandom(random), getRandom(random), getRandom(random), 10);
 		}
+		System.out.println("1 - " + (System.currentTimeMillis() - seed));
+		System.out.println(asp.getNumberOfChildNodes());
 
 		int halfExtent = 1000;
 		asp.add("waldo", -halfExtent, -halfExtent, -halfExtent, 10);
@@ -120,6 +122,22 @@ public class AspTest {
 			Collection<String> intersecting = asp.findIntersecting(-halfExtent + i, -halfExtent + i, -halfExtent + i, 50);
 			assertThat(intersecting).contains("waldo").withFailMessage("Seed: " + seed);
 		}
+		System.out.println("2 - " + (System.currentTimeMillis() - seed));
+		System.out.println(asp.getNumberOfChildNodes());
+
+	}
+
+	@Test
+	public void populateComplexity() throws Exception {
+		long init = System.nanoTime();
+
+		Random random = new Random(1234);
+		for (int i = 0; i < 30000; i++) {
+			long start = System.nanoTime();
+			asp.add("" + i, getRandom(random), getRandom(random), getRandom(random), 10);
+			System.out.println(i + "\t" + (System.nanoTime() - init));
+		}
+		//System.out.println("1 - " + (System.currentTimeMillis() - init));
 	}
 
 	private int getRandom(Random random) {
