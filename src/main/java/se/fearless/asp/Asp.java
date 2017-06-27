@@ -15,13 +15,13 @@ public class Asp<T> {
 	private final Map<T, Entry<T>> entryLookup = new ConcurrentHashMap<>();
 	private final Metrics metrics;
 
-	public Asp(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold, Metrics metrics) {
+	public Asp(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold, Metrics metrics, double minBoundingSide) {
 		this.metrics = metrics;
-		root = new AspNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold, metrics, "root");
+		root = new AspNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold, metrics, "root", minBoundingSide);
 	}
 
 	public Asp(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold) {
-		this(x1, y1, z1, x2, y2, z2, splitThreshold, new NoOpMetrics());
+		this(x1, y1, z1, x2, y2, z2, splitThreshold, new NoOpMetrics(), 0.0);
 	}
 
 	public Collection<T> findIntersecting(double x, double y, double z, double radius) {

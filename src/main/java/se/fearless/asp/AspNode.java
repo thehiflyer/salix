@@ -30,20 +30,22 @@ public class AspNode<T> {
 	private final List<Entry<T>> entries = new ArrayList<>();
 	private final AspNode<T>[] childNodes = new AspNode[8];
 	private final Metrics metrics;
+	private final double minBoundingSide;
 	private final String name;
 	private Box bounds;
 	private final int splitThreshold;
 
-	public AspNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics, String name) {
+	public AspNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics, String name, double minBoundingSide) {
 		this.metrics = metrics;
+		this.minBoundingSide = minBoundingSide;
 		bounds = new Box(a, b);
 		this.splitThreshold = splitThreshold;
 		this.name = name;
 	}
 
 	public void add(Entry<T> entry) {
-		if (entries.size() >= splitThreshold) {
-			metrics.onSplitAttemptBegin(this);
+		if (entries.size() >= splitThreshold && isSmallerThanBounds()) {
+			metrics.onNodeAboveThresholdWhenAddingBegin(this);
 			List<Entry<T>> toKeep = new ArrayList<>();
 			for (Entry<T> existingEntry : entries) {
 				if (existingEntry.isIntersectsNodeBounds()) {
@@ -61,11 +63,15 @@ public class AspNode<T> {
 
 			entries.clear();
 			entries.addAll(toKeep);
-			metrics.onSplitAttemptEnd(this);
+			metrics.onNodeAboveThresholdWhenAddingEnd(this);
 		} else {
 			entries.add(entry);
 			entry.updateNode(this);
 		}
+	}
+
+	private boolean isSmallerThanBounds() {
+		return bounds.getShortestSide() > minBoundingSide;
 	}
 
 	private void addToChildOrList(List<Entry<T>> toKeep, Entry<T> node) {
@@ -82,7 +88,7 @@ public class AspNode<T> {
 		if (octantBounds.isSphereInside(position.getX(), position.getY(), position.getZ(), entry.getRadius())) {
 			if (childNodes[octant.getIndex()] == null) {
 				metrics.onNodeChildCreation();
-				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics, buildName(name, octant));
+				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics, buildName(name, octant), minBoundingSide);
 			}
 			childNodes[octant.getIndex()].add(entry);
 			return true;
@@ -147,7 +153,7 @@ public class AspNode<T> {
 		return sum;
 	}
 
-	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY") {
+	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY", 0) {
 		@Override
 		public int getNumberOfChildNodes() {
 			return 0;

@@ -109,4 +109,9 @@ public class Box {
 				", center=" + center +
 				'}';
 	}
+
+	public double getShortestSide() {
+		Point3D size = b.subtract(a);
+		return Math.min(size.getX(), Math.min(size.getY(), size.getZ()));
+	}
 }

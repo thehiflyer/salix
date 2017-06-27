@@ -13,7 +13,7 @@ public class AspNodeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		node = new AspNode<>(new Point3D(-128, -128, -128), new Point3D(128, 128, 128), 3, new NoOpMetrics(), "test");
+		node = new AspNode<>(new Point3D(-128, -128, -128), new Point3D(128, 128, 128), 3, new NoOpMetrics(), "test", 0);
 	}
 
 	@Test

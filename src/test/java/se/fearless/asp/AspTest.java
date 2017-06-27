@@ -20,7 +20,7 @@ public class AspTest {
 	@Before
 	public void setUp() throws Exception {
 		metrics = new CountingMetrics();
-		asp = new Asp<>(-1024, -1024, -1024, 1024, 1024, 1024, 30, metrics);
+		asp = new Asp<>(-1024, -1024, -1024, 1024, 1024, 1024, 30, metrics, 256);
 	}
 
 	@Test
@@ -135,7 +135,7 @@ public class AspTest {
 		long init = System.nanoTime();
 
 		Random random = new Random(1234);
-		for (int i = 0; i < 30000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			long start = System.nanoTime();
 			asp.add("" + i, getRandom(random), getRandom(random), getRandom(random), 10);
 		}

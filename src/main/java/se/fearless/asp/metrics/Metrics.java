@@ -12,8 +12,8 @@ public interface Metrics {
 	void onFindBegin();
 	void onFindEnd();
 
-	<T> void onSplitAttemptBegin(AspNode<T> node);
-	<T> void onSplitAttemptEnd(AspNode<T> node);
+	<T> void onNodeAboveThresholdWhenAddingBegin(AspNode<T> node);
+	<T> void onNodeAboveThresholdWhenAddingEnd(AspNode<T> node);
 
 	void onNodeChildCreation();
 }

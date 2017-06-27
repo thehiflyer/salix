@@ -7,7 +7,7 @@ public class CountingMetrics implements Metrics {
 	private long adds;
 	private long moves;
 	private long finds;
-	private long splits;
+	private long aboveThresholdWhenAddingEvents;
 	private long childCreations;
 
 
@@ -39,13 +39,13 @@ public class CountingMetrics implements Metrics {
 	}
 
 	@Override
-	public <T> void onSplitAttemptBegin(AspNode<T> node) {
+	public <T> void onNodeAboveThresholdWhenAddingBegin(AspNode<T> node) {
 
 	}
 
 	@Override
-	public <T> void onSplitAttemptEnd(AspNode<T> node) {
-		splits++;
+	public <T> void onNodeAboveThresholdWhenAddingEnd(AspNode<T> node) {
+		aboveThresholdWhenAddingEvents++;
 	}
 
 	@Override
@@ -65,8 +65,8 @@ public class CountingMetrics implements Metrics {
 		return finds;
 	}
 
-	public long getSplits() {
-		return splits;
+	public long getAboveThresholdWhenAddingEvents() {
+		return aboveThresholdWhenAddingEvents;
 	}
 
 	public long getChildCreations() {
@@ -79,7 +79,7 @@ public class CountingMetrics implements Metrics {
 				"adds=" + adds +
 				", moves=" + moves +
 				", finds=" + finds +
-				", splits=" + splits +
+				", aboveThresholdWhenAddingEvents=" + aboveThresholdWhenAddingEvents +
 				", childCreations=" + childCreations +
 				'}';
 	}

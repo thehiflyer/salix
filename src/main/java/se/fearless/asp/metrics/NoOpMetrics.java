@@ -34,12 +34,12 @@ public class NoOpMetrics implements Metrics {
 	}
 
 	@Override
-	public <T> void onSplitAttemptBegin(AspNode<T> node) {
+	public <T> void onNodeAboveThresholdWhenAddingBegin(AspNode<T> node) {
 
 	}
 
 	@Override
-	public <T> void onSplitAttemptEnd(AspNode<T> node) {
+	public <T> void onNodeAboveThresholdWhenAddingEnd(AspNode<T> node) {
 
 	}
 
