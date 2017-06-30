@@ -15,5 +15,6 @@ public interface Metrics {
 	<T> void onNodeAboveThresholdWhenAddingBegin(SalixNode<T> node);
 	<T> void onNodeAboveThresholdWhenAddingEnd(SalixNode<T> node);
 
-	void onNodeChildCreation();
+	void onNodeChildCreationBegin();
+	void onNodeChildCreationEnd();
 }

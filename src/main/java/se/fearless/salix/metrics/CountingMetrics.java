@@ -52,7 +52,13 @@ public class CountingMetrics implements Metrics {
 	}
 
 	@Override
-	public void onNodeChildCreation() {
+	public void onNodeChildCreationBegin() {
+		timeSpentOnChildCreation.start();
+	}
+
+	@Override
+	public void onNodeChildCreationEnd() {
+		timeSpentOnChildCreation.end();
 		childCreations++;
 	}
 
@@ -84,6 +90,8 @@ public class CountingMetrics implements Metrics {
 				", finds=" + finds +
 				", aboveThresholdWhenAddingEvents=" + aboveThresholdWhenAddingEvents +
 				", childCreations=" + childCreations +
+				", timeSpentOnAdd=" + timeSpentOnAdd +
+				", timeSpentOnChildCreation=" + timeSpentOnChildCreation +
 				'}';
 	}
 }

@@ -87,8 +87,9 @@ public class SalixNode<T> {
 		Box octantBounds = getOctantBounds(octant);
 		if (octantBounds.isSphereInside(position.getX(), position.getY(), position.getZ(), entry.getRadius())) {
 			if (childNodes[octant.getIndex()] == null) {
-				metrics.onNodeChildCreation();
+				metrics.onNodeChildCreationBegin();
 				childNodes[octant.getIndex()] = new SalixNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics, buildName(name, octant), minBoundingSide);
+				metrics.onNodeChildCreationEnd();
 			}
 			childNodes[octant.getIndex()].add(entry);
 			return true;

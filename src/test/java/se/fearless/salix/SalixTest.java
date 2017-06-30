@@ -142,6 +142,7 @@ public class SalixTest {
 
 		System.out.println(salix.getNumberOfChildNodes());
 		System.out.println(metrics);
+
 	}
 
 	private int getRandom(Random random) {

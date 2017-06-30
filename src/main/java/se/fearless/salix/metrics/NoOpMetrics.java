@@ -44,7 +44,12 @@ public class NoOpMetrics implements Metrics {
 	}
 
 	@Override
-	public void onNodeChildCreation() {
+	public void onNodeChildCreationBegin() {
+
+	}
+
+	@Override
+	public void onNodeChildCreationEnd() {
 
 	}
 }

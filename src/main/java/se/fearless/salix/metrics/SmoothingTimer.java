@@ -11,4 +11,9 @@ public class SmoothingTimer {
 	public void end() {
 		meter.add(System.nanoTime() - startTime);
 	}
+
+	@Override
+	public String toString() {
+		return "" + meter.get();
+	}
 }
