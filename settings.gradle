@@ -4,4 +4,4 @@ include 'javafx-renderer'
 rootProject.name = 'salix'
 
 project(":core").buildFileName = "core.gradle"
-
+project(":javafx-renderer").buildFileName = "javafx-renderer.gradle"
