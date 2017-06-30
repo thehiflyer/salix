@@ -3,3 +3,5 @@ include ':core'
 rootProject.name = 'salix'
 
 project(":core").buildFileName = "core.gradle"
+include 'javafx-renderer'
+
