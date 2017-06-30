@@ -8,4 +8,6 @@ public interface EntryView<T> {
     Point3D getPosition();
 
     double getRadius();
+
+    boolean isIntersectsNodeBounds();
 }

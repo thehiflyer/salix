@@ -1,9 +1,11 @@
 package se.fearless.salix.view;
 
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.PickResult;
 import javafx.scene.input.ScrollEvent;
 
 public class MouseHandler {
@@ -36,6 +38,17 @@ public class MouseHandler {
 
     public void handleMouse(Scene scene) {
 
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                PickResult pickResult = event.getPickResult();
+                Node intersectedNode = pickResult.getIntersectedNode();
+                if (intersectedNode != null) {
+                    Object userData = intersectedNode.getUserData();
+                    System.out.println(userData);
+                }
+            }
+        });
 
         scene.setOnScroll(new EventHandler<ScrollEvent>() {
             @Override

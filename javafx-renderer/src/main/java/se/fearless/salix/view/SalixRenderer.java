@@ -2,6 +2,8 @@ package se.fearless.salix.view;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
@@ -29,14 +31,35 @@ public class SalixRenderer<T> {
             Point3D center = boundingBox.getCenter();
             translate(box, center);
 
+            box.setDisable(true);
+
             box.setDrawMode(DrawMode.LINE);
 
             System.out.println("Adding node " + informationNode);
             group.getChildren().add(box);
         });
 
+        final PhongMaterial redMaterial = new PhongMaterial();
+        redMaterial.setDiffuseColor(Color.DARKRED);
+        redMaterial.setSpecularColor(Color.RED);
+
+        final PhongMaterial greenMaterial = new PhongMaterial();
+        greenMaterial.setDiffuseColor(Color.DARKGREEN);
+        greenMaterial.setSpecularColor(Color.GREEN);
+
+
         salix.visitEntries(entryView -> {
             Sphere sphere = new Sphere(entryView.getRadius(), 8);
+
+            sphere.setUserData(entryView);
+
+
+
+            if (entryView.isIntersectsNodeBounds()) {
+                sphere.setMaterial(redMaterial);
+            } else {
+                sphere.setMaterial(greenMaterial);
+            }
 
             Point3D position = entryView.getPosition();
             translate(sphere, position);

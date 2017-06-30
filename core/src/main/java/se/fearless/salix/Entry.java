@@ -50,6 +50,7 @@ public class Entry<T> implements EntryView<T> {
 		updateIntersectionOfNodeBounds();
 	}
 
+	@Override
 	public boolean isIntersectsNodeBounds() {
 		return intersectsNodeBounds;
 	}
