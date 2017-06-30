@@ -1,9 +1,9 @@
-package se.fearless.asp;
+package se.fearless.salix;
 
 import com.google.common.collect.Iterables;
 import org.junit.Before;
 import org.junit.Test;
-import se.fearless.asp.metrics.CountingMetrics;
+import se.fearless.salix.metrics.CountingMetrics;
 
 import java.util.Collection;
 import java.util.Random;

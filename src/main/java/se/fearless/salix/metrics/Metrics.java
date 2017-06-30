@@ -1,6 +1,6 @@
-package se.fearless.asp.metrics;
+package se.fearless.salix.metrics;
 
-import se.fearless.asp.AspNode;
+import se.fearless.salix.AspNode;
 
 public interface Metrics {
 	void onAddEntryBegin();

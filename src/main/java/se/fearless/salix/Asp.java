@@ -1,8 +1,8 @@
-package se.fearless.asp;
+package se.fearless.salix;
 
 import javafx.geometry.Point3D;
-import se.fearless.asp.metrics.Metrics;
-import se.fearless.asp.metrics.NoOpMetrics;
+import se.fearless.salix.metrics.Metrics;
+import se.fearless.salix.metrics.NoOpMetrics;
 
 import java.util.ArrayList;
 import java.util.Collection;

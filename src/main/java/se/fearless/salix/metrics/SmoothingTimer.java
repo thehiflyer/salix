@@ -1,4 +1,4 @@
-package se.fearless.asp.metrics;
+package se.fearless.salix.metrics;
 
 public class SmoothingTimer {
 	private final ValueSmoothingMeter meter = new ValueSmoothingMeter(0.001);

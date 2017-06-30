@@ -1,4 +1,4 @@
-package se.fearless.asp;
+package se.fearless.salix;
 
 public class Face {
 	public static final int FRONT = 0;

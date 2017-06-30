@@ -1,9 +1,6 @@
-package se.fearless.asp;
+package se.fearless.salix;
 
 import javafx.geometry.Point3D;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 public class Box {
 

@@ -1,4 +1,4 @@
-package se.fearless.asp;
+package se.fearless.salix;
 
 import javafx.geometry.Point3D;
 import org.junit.Test;

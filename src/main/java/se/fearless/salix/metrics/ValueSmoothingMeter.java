@@ -1,4 +1,4 @@
-package se.fearless.asp.metrics;
+package se.fearless.salix.metrics;
 
 
 import java.util.concurrent.atomic.AtomicLong;

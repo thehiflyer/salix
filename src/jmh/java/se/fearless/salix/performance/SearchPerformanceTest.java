@@ -1,7 +1,7 @@
-package se.fearless.asp.performance;
+package se.fearless.salix.performance;
 
 import org.openjdk.jmh.annotations.*;
-import se.fearless.asp.Asp;
+import se.fearless.salix.Asp;
 
 import java.util.Random;
 import java.util.stream.DoubleStream;

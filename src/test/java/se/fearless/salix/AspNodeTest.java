@@ -1,9 +1,9 @@
-package se.fearless.asp;
+package se.fearless.salix;
 
 import javafx.geometry.Point3D;
 import org.junit.Before;
 import org.junit.Test;
-import se.fearless.asp.metrics.NoOpMetrics;
+import se.fearless.salix.metrics.NoOpMetrics;
 
 import static org.junit.Assert.assertEquals;
 
