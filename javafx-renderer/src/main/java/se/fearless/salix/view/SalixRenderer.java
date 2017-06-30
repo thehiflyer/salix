@@ -1,10 +1,13 @@
 package se.fearless.salix.view;
 
 import javafx.geometry.Point3D;
+import javafx.scene.DepthTest;
 import javafx.scene.Node;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
@@ -24,21 +27,12 @@ public class SalixRenderer<T> {
     public void updateMesh() {
         group.getChildren().clear();
 
-        salix.visitNodes(informationNode -> {
-            se.fearless.salix.Box boundingBox = informationNode.getBoundingBox();
-            Point3D size = boundingBox.getB().subtract(boundingBox.getA());
-            final Box box = new Box(size.getX(), size.getY(), size.getZ());
-            Point3D center = boundingBox.getCenter();
-            translate(box, center);
+        createEntryMeshes();
+        createNodesMeshes();
 
-            box.setDisable(true);
+    }
 
-            box.setDrawMode(DrawMode.LINE);
-
-            System.out.println("Adding node " + informationNode);
-            group.getChildren().add(box);
-        });
-
+    private void createEntryMeshes() {
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
@@ -60,12 +54,32 @@ public class SalixRenderer<T> {
             } else {
                 sphere.setMaterial(greenMaterial);
             }
-
             Point3D position = entryView.getPosition();
             translate(sphere, position);
             group.getChildren().add(sphere);
             System.out.println("Adding entry " + entryView);
 
+        });
+    }
+
+    private void createNodesMeshes() {
+        final PhongMaterial boxMaterial = new PhongMaterial();
+        boxMaterial.setDiffuseColor(new Color(0.1, 0.2, 0.9, 0.005));
+        boxMaterial.setSpecularColor(Color.WHITE);
+
+        salix.visitNodes(informationNode -> {
+            se.fearless.salix.Box boundingBox = informationNode.getBoundingBox();
+            Point3D size = boundingBox.getB().subtract(boundingBox.getA());
+            final Box box = new Box(size.getX(), size.getY(), size.getZ());
+            Point3D center = boundingBox.getCenter();
+            translate(box, center);
+
+            box.setDisable(true);
+            box.setMaterial(boxMaterial);
+            //box.setDrawMode(DrawMode.LINE);
+
+            System.out.println("Adding node " + informationNode);
+            group.getChildren().add(box);
         });
     }
 
