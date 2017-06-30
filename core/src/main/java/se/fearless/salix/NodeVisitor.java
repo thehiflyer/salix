@@ -1,5 +1,5 @@
 package se.fearless.salix;
 
-public interface InformationVisitor {
+public interface NodeVisitor {
     void visit(InformationNode informationNode);
 }

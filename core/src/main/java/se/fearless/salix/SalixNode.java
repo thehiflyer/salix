@@ -213,11 +213,11 @@ public class SalixNode<T> implements InformationNode {
 		return name;
 	}
 
-	public void executeInformationVisitor(InformationVisitor informationVisitor) {
-		informationVisitor.visit(this);
+	public void executeInformationVisitor(NodeVisitor nodeVisitor) {
+		nodeVisitor.visit(this);
 		for (SalixNode<T> childNode : childNodes) {
 			if (childNode != null) {
-				childNode.executeInformationVisitor(informationVisitor);
+				childNode.executeInformationVisitor(nodeVisitor);
 			}
 		}
 	}

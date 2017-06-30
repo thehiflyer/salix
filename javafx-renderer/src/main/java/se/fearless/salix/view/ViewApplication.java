@@ -61,7 +61,7 @@ public class ViewApplication extends Application {
 
         Salix<String> stringSalix = new Salix<>(-100, -100, -100, 100, 100, 100, 3);
         SalixRenderer<String> salixRenderer = new SalixRenderer<>(stringSalix);
-        populateTree(stringSalix, 100, -100, 100);
+        populateTree(stringSalix, 1000, -100, 100);
 
         salixRenderer.updateMesh();
 
@@ -115,7 +115,7 @@ public class ViewApplication extends Application {
     public void populateTree(Salix<String> salix, int qty, int minXtent, int maxXtent) throws Exception {
         Random random = new Random(1234);
         for (int i = 0; i < qty; i++) {
-            salix.add("" + i, getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), 10);
+            salix.add("" + i, getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), 2);
         }
 
     }

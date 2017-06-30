@@ -2,7 +2,7 @@ package se.fearless.salix;
 
 import javafx.geometry.Point3D;
 
-public class Entry<T> {
+public class Entry<T> implements EntryView<T> {
 	private final T value;
 	private Point3D position;
 	private final double radius;
@@ -15,14 +15,17 @@ public class Entry<T> {
 		this.radius = radius;
 	}
 
+	@Override
 	public T getValue() {
 		return value;
 	}
 
+	@Override
 	public Point3D getPosition() {
 		return position;
 	}
 
+	@Override
 	public double getRadius() {
 		return radius;
 	}
@@ -50,6 +53,9 @@ public class Entry<T> {
 	public boolean isIntersectsNodeBounds() {
 		return intersectsNodeBounds;
 	}
+
+
+
 
 	@Override
 	public String toString() {
