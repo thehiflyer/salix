@@ -7,13 +7,13 @@ import se.fearless.salix.metrics.NoOpMetrics;
 
 import static org.junit.Assert.assertEquals;
 
-public class AspNodeTest {
+public class SalixNodeTest {
 
-	private AspNode<String> node;
+	private SalixNode<String> node;
 
 	@Before
 	public void setUp() throws Exception {
-		node = new AspNode<>(new Point3D(-128, -128, -128), new Point3D(128, 128, 128), 3, new NoOpMetrics(), "test", 0);
+		node = new SalixNode<>(new Point3D(-128, -128, -128), new Point3D(128, 128, 128), 3, new NoOpMetrics(), "test", 0);
 	}
 
 	@Test

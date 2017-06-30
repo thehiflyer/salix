@@ -1,6 +1,6 @@
 package se.fearless.salix.metrics;
 
-import se.fearless.salix.AspNode;
+import se.fearless.salix.SalixNode;
 
 public class CountingMetrics implements Metrics {
 
@@ -42,12 +42,12 @@ public class CountingMetrics implements Metrics {
 	}
 
 	@Override
-	public <T> void onNodeAboveThresholdWhenAddingBegin(AspNode<T> node) {
+	public <T> void onNodeAboveThresholdWhenAddingBegin(SalixNode<T> node) {
 
 	}
 
 	@Override
-	public <T> void onNodeAboveThresholdWhenAddingEnd(AspNode<T> node) {
+	public <T> void onNodeAboveThresholdWhenAddingEnd(SalixNode<T> node) {
 		aboveThresholdWhenAddingEvents++;
 	}
 

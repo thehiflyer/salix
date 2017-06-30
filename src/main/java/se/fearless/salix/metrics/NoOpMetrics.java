@@ -1,6 +1,6 @@
 package se.fearless.salix.metrics;
 
-import se.fearless.salix.AspNode;
+import se.fearless.salix.SalixNode;
 
 public class NoOpMetrics implements Metrics {
 	@Override
@@ -34,12 +34,12 @@ public class NoOpMetrics implements Metrics {
 	}
 
 	@Override
-	public <T> void onNodeAboveThresholdWhenAddingBegin(AspNode<T> node) {
+	public <T> void onNodeAboveThresholdWhenAddingBegin(SalixNode<T> node) {
 
 	}
 
 	@Override
-	public <T> void onNodeAboveThresholdWhenAddingEnd(AspNode<T> node) {
+	public <T> void onNodeAboveThresholdWhenAddingEnd(SalixNode<T> node) {
 
 	}
 

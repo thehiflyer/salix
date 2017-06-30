@@ -10,17 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Asp<T> {
-	private final AspNode<T> root;
+public class Salix<T> {
+	private final SalixNode<T> root;
 	private final Map<T, Entry<T>> entryLookup = new ConcurrentHashMap<>();
 	private final Metrics metrics;
 
-	public Asp(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold, Metrics metrics, double minBoundingSide) {
+	public Salix(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold, Metrics metrics, double minBoundingSide) {
 		this.metrics = metrics;
-		root = new AspNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold, metrics, "root", minBoundingSide);
+		root = new SalixNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold, metrics, "root", minBoundingSide);
 	}
 
-	public Asp(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold) {
+	public Salix(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold) {
 		this(x1, y1, z1, x2, y2, z2, splitThreshold, new NoOpMetrics(), 0.0);
 	}
 
@@ -54,7 +54,7 @@ public class Asp<T> {
 		metrics.onMoveEntryBegin();
 		try {
 			Entry<T> internalEntry = entryLookup.get(entry);
-			AspNode<T> currentNode = internalEntry.getNode();
+			SalixNode<T> currentNode = internalEntry.getNode();
 			if (currentNode.isWithinBounds(x, y, z, internalEntry.getRadius())) {
 				currentNode.updateNodeAndPositionForEntry(internalEntry, x, y, z);
 				return;

@@ -6,7 +6,7 @@ public class Entry<T> {
 	private final T value;
 	private Point3D position;
 	private final double radius;
-	private AspNode<T> currentNode;
+	private SalixNode<T> currentNode;
 	private boolean intersectsNodeBounds = false;
 
 	public Entry(T value, double x, double y, double z, double radius) {
@@ -27,7 +27,7 @@ public class Entry<T> {
 		return radius;
 	}
 
-	public void updateNode(AspNode<T> node) {
+	public void updateNode(SalixNode<T> node) {
 		this.currentNode = node;
 		updateIntersectionOfNodeBounds();
 	}
@@ -38,7 +38,7 @@ public class Entry<T> {
 		}
 	}
 
-	public AspNode<T> getNode() {
+	public SalixNode<T> getNode() {
 		return currentNode;
 	}
 

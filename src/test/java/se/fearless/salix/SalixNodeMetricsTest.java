@@ -7,15 +7,15 @@ import se.fearless.salix.metrics.CountingMetrics;
 
 import static org.junit.Assert.*;
 
-public class AspNodeMetricsTest {
+public class SalixNodeMetricsTest {
 
-	private AspNode<String> node;
+	private SalixNode<String> node;
 	private CountingMetrics metrics;
 
 	@Before
 	public void setUp() throws Exception {
 		metrics = new CountingMetrics();
-		node = new AspNode<>(new Point3D(-100, -100, -100), new Point3D(100, 100, 100), 3, metrics, "test", 0);
+		node = new SalixNode<>(new Point3D(-100, -100, -100), new Point3D(100, 100, 100), 3, metrics, "test", 0);
 	}
 
 	@Test

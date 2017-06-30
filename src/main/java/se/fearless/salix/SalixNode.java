@@ -26,16 +26,16 @@ import java.util.List;
 
 */
 
-public class AspNode<T> {
+public class SalixNode<T> {
 	private final List<Entry<T>> entries = new ArrayList<>();
-	private final AspNode<T>[] childNodes = new AspNode[8];
+	private final SalixNode<T>[] childNodes = new SalixNode[8];
 	private final Metrics metrics;
 	private final double minBoundingSide;
 	private final String name;
 	private Box bounds;
 	private final int splitThreshold;
 
-	public AspNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics, String name, double minBoundingSide) {
+	public SalixNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics, String name, double minBoundingSide) {
 		this.metrics = metrics;
 		this.minBoundingSide = minBoundingSide;
 		bounds = new Box(a, b);
@@ -88,7 +88,7 @@ public class AspNode<T> {
 		if (octantBounds.isSphereInside(position.getX(), position.getY(), position.getZ(), entry.getRadius())) {
 			if (childNodes[octant.getIndex()] == null) {
 				metrics.onNodeChildCreation();
-				childNodes[octant.getIndex()] = new AspNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics, buildName(name, octant), minBoundingSide);
+				childNodes[octant.getIndex()] = new SalixNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics, buildName(name, octant), minBoundingSide);
 			}
 			childNodes[octant.getIndex()].add(entry);
 			return true;
@@ -116,8 +116,8 @@ public class AspNode<T> {
 	}
 
 
-	public AspNode<T> getChildNode(Octant octant) {
-		AspNode<T> child = childNodes[octant.getIndex()];
+	public SalixNode<T> getChildNode(Octant octant) {
+		SalixNode<T> child = childNodes[octant.getIndex()];
 		if (child == null) {
 			return EMPTY_NODE;
 		}
@@ -126,7 +126,7 @@ public class AspNode<T> {
 
 	public void addIntersectingToList(Point3D position, double radius, List<T> result) {
 		for (int i = 0; i < childNodes.length; i++) {
-			AspNode<T> child = childNodes[i];
+			SalixNode<T> child = childNodes[i];
 			if (child != null) {
 				boolean sphereIsOutside = child.bounds.isSphereOutside(position.getX(), position.getY(), position.getZ(), radius);
 				if (!sphereIsOutside) {
@@ -144,7 +144,7 @@ public class AspNode<T> {
 
 	public int getNumberOfChildNodes() {
 		int sum = 0;
-		for (AspNode<T> child : childNodes) {
+		for (SalixNode<T> child : childNodes) {
 			if (child != null) {
 				sum++;
 				sum += child.getNumberOfChildNodes();
@@ -153,7 +153,7 @@ public class AspNode<T> {
 		return sum;
 	}
 
-	public static final AspNode EMPTY_NODE = new AspNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY", 0) {
+	public static final SalixNode EMPTY_NODE = new SalixNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY", 0) {
 		@Override
 		public int getNumberOfChildNodes() {
 			return 0;
@@ -165,7 +165,7 @@ public class AspNode<T> {
 	}
 
 	public boolean isIntersectingSplitPlanes(double x, double y, double z, double radius) {
-		for (AspNode<T> node : childNodes) {
+		for (SalixNode<T> node : childNodes) {
 			if (node != null) {
 				boolean sphereIntersecting = node.bounds.isSphereIntersecting(x, y, z, radius);
 				if (sphereIntersecting) {
@@ -178,7 +178,7 @@ public class AspNode<T> {
 
 	public void updateNodeAndPositionForEntry(Entry<T> entry, double x, double y, double z) {
 		Octant octant = getOctant(x, y, z);
-		AspNode<T> childNode = getChildNode(octant);
+		SalixNode<T> childNode = getChildNode(octant);
 		if (childNode != EMPTY_NODE) {
 			childNode.updateNodeAndPositionForEntry(entry, x, y, z);
 		} else {
