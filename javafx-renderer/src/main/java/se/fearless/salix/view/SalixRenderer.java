@@ -11,10 +11,35 @@ import javafx.scene.shape.Sphere;
 import se.fearless.salix.EntryView;
 import se.fearless.salix.Salix;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+
 public class SalixRenderer<T> {
     private final Salix<T> salix;
     private final Xform group = new Xform();
+    private HashMap<T, Sphere> entryMap = new HashMap<>();
 
+    final PhongMaterial redMaterial = new PhongMaterial();
+    {
+        redMaterial.setDiffuseColor(Color.DARKRED);
+        redMaterial.setSpecularColor(Color.RED);
+    }
+
+    final PhongMaterial greenMaterial = new PhongMaterial();
+    {
+        greenMaterial.setDiffuseColor(Color.DARKGREEN);
+        greenMaterial.setSpecularColor(Color.GREEN);
+    }
+
+    final PhongMaterial highlightMaterial = new PhongMaterial();
+    {
+        greenMaterial.setDiffuseColor(Color.DARKORANGE);
+        greenMaterial.setSpecularColor(Color.ORANGE);
+    }
+
+    private List<T> highlighted = new ArrayList<>();
 
     public SalixRenderer(Salix<T> salix) {
         this.salix = salix;
@@ -39,21 +64,15 @@ public class SalixRenderer<T> {
             group.getChildren().add(box);
         });
 
-        final PhongMaterial redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(Color.DARKRED);
-        redMaterial.setSpecularColor(Color.RED);
-
-        final PhongMaterial greenMaterial = new PhongMaterial();
-        greenMaterial.setDiffuseColor(Color.DARKGREEN);
-        greenMaterial.setSpecularColor(Color.GREEN);
 
 
+        entryMap.clear();
         salix.visitEntries(entryView -> {
-            Sphere sphere = new Sphere(entryView.getRadius(), 8);
+            Sphere sphere = new Sphere(entryView.getRadius(), 16);
 
             sphere.setUserData(entryView);
 
-
+            entryMap.put(entryView.getValue(), sphere);
 
             if (entryView.isIntersectsNodeBounds()) {
                 sphere.setMaterial(redMaterial);
@@ -79,5 +98,19 @@ public class SalixRenderer<T> {
         return group;
     }
 
+    public void clearHighlighted() {
+        for (T t : highlighted) {
+            Sphere sphere = entryMap.get(t);
+            sphere.setMaterial(greenMaterial);
+        }
+        highlighted.clear();
+    }
 
+    public void setHightlighted(Collection<T> intersecting) {
+        for (T t : intersecting) {
+            Sphere sphere = entryMap.get(t);
+            sphere.setMaterial(highlightMaterial);
+            highlighted.add(t);
+        }
+    }
 }

@@ -56,13 +56,11 @@ public class Entry<T> implements EntryView<T> {
 	}
 
 
-
-
 	@Override
 	public String toString() {
 		return "Entry{" +
-				"value=" + value +
-				", position=" + position +
+				"position=" + position +
+				", radius=" + radius +
 				", intersectsNodeBounds=" + intersectsNodeBounds +
 				'}';
 	}

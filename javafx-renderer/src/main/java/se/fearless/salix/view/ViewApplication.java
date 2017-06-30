@@ -1,6 +1,7 @@
 package se.fearless.salix.view;
 
 import javafx.application.Application;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
@@ -11,6 +12,7 @@ import javafx.scene.shape.Box;
 import javafx.stage.Stage;
 import se.fearless.salix.Salix;
 
+import java.util.Collection;
 import java.util.Random;
 
 public class ViewApplication extends Application {
@@ -59,9 +61,13 @@ public class ViewApplication extends Application {
         scene.setCamera(camera);
         root.getChildren().addAll(world);
 
-        Salix<String> stringSalix = new Salix<>(-100, -100, -100, 100, 100, 100, 3);
+
+        int x1 = -1024;
+        int x2 = 1024;
+
+        Salix<String> stringSalix = new Salix<>(x1, x1, x1, x2, x2, x2, 3);
         SalixRenderer<String> salixRenderer = new SalixRenderer<>(stringSalix);
-        populateTree(stringSalix, 20, -100, 100);
+        populateTree(stringSalix, 1000, x1 + 20, x2 - 20);
 
         salixRenderer.updateMesh();
 
@@ -70,6 +76,30 @@ public class ViewApplication extends Application {
         MouseHandler mouseHandler = new MouseHandler(camera, cameraXform, cameraXform2);
         mouseHandler.handleMouse(scene);
         stage.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Point3D position = new Point3D(0, 0, 0);
+                Point3D movement = new Point3D(16, 16, 16);
+                boolean movePos = true;
+                while (true) {
+                    if (movePos) {
+                        position = position.add(movement);
+                        Collection<String> intersecting = stringSalix.findIntersecting(position.getX(), position.getY(), position.getZ(), 32);
+                        salixRenderer.clearHighlighted();
+                        salixRenderer.setHightlighted(intersecting);
+                    }
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }).start();
     }
 
     private void buildCamera() {
@@ -121,6 +151,6 @@ public class ViewApplication extends Application {
     }
 
     private int getRandom(Random random, int minXtent, int maxXtent) {
-        return random.nextInt(2*maxXtent) + minXtent;
+        return random.nextInt(2 * maxXtent) + minXtent;
     }
 }

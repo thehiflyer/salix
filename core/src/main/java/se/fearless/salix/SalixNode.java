@@ -68,6 +68,8 @@ public class SalixNode<T> implements InformationNode {
 			entries.add(entry);
 			entry.updateNode(this);
 		}
+		entry.updateNode(this);
+
 	}
 
 	private boolean isSmallerThanBounds() {
