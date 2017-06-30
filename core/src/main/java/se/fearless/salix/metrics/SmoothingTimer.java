@@ -8,7 +8,7 @@ public class SmoothingTimer {
 		startTime = System.nanoTime();
 	}
 
-	public void end() {
+	public void stop() {
 		meter.add(System.nanoTime() - startTime);
 	}
 

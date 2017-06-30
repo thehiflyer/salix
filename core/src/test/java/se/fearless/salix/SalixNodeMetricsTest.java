@@ -2,6 +2,7 @@ package se.fearless.salix;
 
 import javafx.geometry.Point3D;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.fearless.salix.metrics.CountingMetrics;
 
@@ -31,6 +32,7 @@ public class SalixNodeMetricsTest {
 
 
 	@Test
+	@Ignore("Don't know what the expected behaviour is yet")
 	public void addFiveEntriesTriggersTwoSplits() throws Exception {
 		node.add(new Entry<>("TOP_LEFT_BACK_1", -11, 10, 10, 5));
 		node.add(new Entry<>("TOP_LEFT_BACK_2", -10, 10, 10, 5));

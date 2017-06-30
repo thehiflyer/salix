@@ -10,7 +10,8 @@ public class CountingMetrics implements Metrics {
 	private long aboveThresholdWhenAddingEvents;
 	private long childCreations;
 	private SmoothingTimer timeSpentOnAdd = new SmoothingTimer();
-	private SmoothingTimer timeSpentOnChildCreation = new SmoothingTimer();
+	private NestedSmoothingTimer<SalixNode> timeSpentOnAboveThreshold = new NestedSmoothingTimer<>();
+ 	private SmoothingTimer timeSpentOnChildCreation = new SmoothingTimer();
 
 	@Override
 	public void onAddEntryBegin() {
@@ -20,7 +21,7 @@ public class CountingMetrics implements Metrics {
 	@Override
 	public void onAddEntryEnd() {
 		adds++;
-		timeSpentOnAdd.end();
+		timeSpentOnAdd.stop();
 	}
 
 	@Override
@@ -43,11 +44,12 @@ public class CountingMetrics implements Metrics {
 
 	@Override
 	public <T> void onNodeAboveThresholdWhenAddingBegin(SalixNode<T> node) {
-
+		timeSpentOnAboveThreshold.start(node);
 	}
 
 	@Override
 	public <T> void onNodeAboveThresholdWhenAddingEnd(SalixNode<T> node) {
+		timeSpentOnAboveThreshold.stop(node);
 		aboveThresholdWhenAddingEvents++;
 	}
 
@@ -58,7 +60,7 @@ public class CountingMetrics implements Metrics {
 
 	@Override
 	public void onNodeChildCreationEnd() {
-		timeSpentOnChildCreation.end();
+		timeSpentOnChildCreation.stop();
 		childCreations++;
 	}
 
@@ -91,6 +93,7 @@ public class CountingMetrics implements Metrics {
 				", aboveThresholdWhenAddingEvents=" + aboveThresholdWhenAddingEvents +
 				", childCreations=" + childCreations +
 				", timeSpentOnAdd=" + timeSpentOnAdd +
+				", timeSpentOnAboveThreshold=" + timeSpentOnAboveThreshold +
 				", timeSpentOnChildCreation=" + timeSpentOnChildCreation +
 				'}';
 	}
