@@ -9,15 +9,18 @@ public class CountingMetrics implements Metrics {
 	private long finds;
 	private long aboveThresholdWhenAddingEvents;
 	private long childCreations;
-
+	private SmoothingTimer timeSpentOnAdd = new SmoothingTimer();
+	private SmoothingTimer timeSpentOnChildCreation = new SmoothingTimer();
 
 	@Override
 	public void onAddEntryBegin() {
+		timeSpentOnAdd.start();
 	}
 
 	@Override
 	public void onAddEntryEnd() {
 		adds++;
+		timeSpentOnAdd.end();
 	}
 
 	@Override
