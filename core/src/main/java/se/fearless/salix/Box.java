@@ -111,4 +111,6 @@ public class Box {
 		Point3D size = b.subtract(a);
 		return Math.min(size.getX(), Math.min(size.getY(), size.getZ()));
 	}
+
+
 }

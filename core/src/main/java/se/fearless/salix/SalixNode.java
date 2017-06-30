@@ -26,7 +26,7 @@ import java.util.List;
 
 */
 
-public class SalixNode<T> {
+public class SalixNode<T> implements InformationNode {
 	private final List<Entry<T>> entries = new ArrayList<>();
 	private final SalixNode<T>[] childNodes = new SalixNode[8];
 	private final Metrics metrics;
@@ -201,6 +201,25 @@ public class SalixNode<T> {
 	public String toString() {
 		return name + '\'' +
 				", bounds=" + bounds;
+	}
+
+	@Override
+	public Box getBoundingBox() {
+		return bounds;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	public void executeInformationVisitor(InformationVisitor informationVisitor) {
+		informationVisitor.visit(this);
+		for (SalixNode<T> childNode : childNodes) {
+			if (childNode != null) {
+				childNode.executeInformationVisitor(informationVisitor);
+			}
+		}
 	}
 }
 

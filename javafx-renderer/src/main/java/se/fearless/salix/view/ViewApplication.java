@@ -1,4 +1,4 @@
-package se.fearless.salix;
+package se.fearless.salix.view;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -9,6 +9,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.stage.Stage;
+import se.fearless.salix.Salix;
+
+import java.util.Random;
 
 public class ViewApplication extends Application {
     private static final double AXIS_LENGTH = 250.0;
@@ -55,6 +58,15 @@ public class ViewApplication extends Application {
 
         scene.setCamera(camera);
         root.getChildren().addAll(world);
+
+        Salix<String> stringSalix = new Salix<>(-100, -100, -100, 100, 100, 100, 3);
+        SalixRenderer<String> salixRenderer = new SalixRenderer<>(stringSalix);
+        populateTree(stringSalix, 100, -100, 100);
+
+        salixRenderer.updateMesh();
+
+        root.getChildren().add(salixRenderer.getNode());
+
         MouseHandler mouseHandler = new MouseHandler(camera, cameraXform, cameraXform2);
         mouseHandler.handleMouse(scene);
         stage.show();
@@ -98,5 +110,17 @@ public class ViewApplication extends Application {
         axisGroup.getChildren().addAll(xAxis, yAxis, zAxis);
         axisGroup.setVisible(true);
         world.getChildren().addAll(axisGroup);
+    }
+
+    public void populateTree(Salix<String> salix, int qty, int minXtent, int maxXtent) throws Exception {
+        Random random = new Random(1234);
+        for (int i = 0; i < qty; i++) {
+            salix.add("" + i, getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), 10);
+        }
+
+    }
+
+    private int getRandom(Random random, int minXtent, int maxXtent) {
+        return random.nextInt(2*maxXtent) + minXtent;
     }
 }

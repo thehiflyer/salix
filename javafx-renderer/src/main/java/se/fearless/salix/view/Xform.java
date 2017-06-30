@@ -1,4 +1,4 @@
-package se.fearless.salix;
+package se.fearless.salix.view;
 
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;

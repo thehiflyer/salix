@@ -64,4 +64,9 @@ public class Salix<T> {
 			metrics.onMoveEntryEnd();
 		}
 	}
+
+	public void executeInformationVisitor(InformationVisitor informationVisitor) {
+		root.executeInformationVisitor(informationVisitor);
+	}
+
 }

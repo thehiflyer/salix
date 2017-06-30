@@ -1,4 +1,4 @@
-package se.fearless.salix;
+package se.fearless.salix.view;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
