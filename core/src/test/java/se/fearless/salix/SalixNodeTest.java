@@ -13,7 +13,7 @@ public class SalixNodeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		node = new SalixNode<>(new Point3D(-128, -128, -128), new Point3D(128, 128, 128), 3, new NoOpMetrics(), "test", 0);
+		node = new SalixNode<>(new Point3D(-128, -128, -128), new Point3D(128, 128, 128), 3, new NoOpMetrics(), "test", 0, 0);
 	}
 
 	@Test

@@ -16,7 +16,7 @@ public class SalixNodeMetricsTest {
 	@Before
 	public void setUp() throws Exception {
 		metrics = new CountingMetrics();
-		node = new SalixNode<>(new Point3D(-100, -100, -100), new Point3D(100, 100, 100), 3, metrics, "test", 0);
+		node = new SalixNode<>(new Point3D(-100, -100, -100), new Point3D(100, 100, 100), 3, metrics, "test", 0, 0);
 	}
 
 	@Test

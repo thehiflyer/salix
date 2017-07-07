@@ -17,6 +17,7 @@ import se.fearless.salix.Salix;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SalixRenderer<T> {
     private final Salix<T> salix;
@@ -72,32 +73,51 @@ public class SalixRenderer<T> {
         boxMaterial.setDiffuseColor(new Color(0.1, 0.2, 0.9, 0.005));
         //boxMaterial.setSpecularColor(Color.WHITE);
 
-        List<Box> boxes = new ArrayList<>();
 
+        class Oct {
+            int depth;
+            Box box;
+
+            public Oct(int depth, Box box) {
+                this.depth = depth;
+                this.box = box;
+            }
+        }
+
+        List<Oct> boxes = new ArrayList<>();
+
+        AtomicInteger maxDepth = new AtomicInteger();
         salix.visitNodes(informationNode -> {
+            int depth = informationNode.getDepth();
+            maxDepth.set(Math.max(maxDepth.get(), depth));
             se.fearless.salix.Box boundingBox = informationNode.getBoundingBox();
             Point3D size = boundingBox.getB().subtract(boundingBox.getA());
-            final Box box = new Box(size.getX(), size.getY(), size.getZ());
+            final Box box = new Box(size.getX()-1*0.9, size.getY()*0.9, size.getZ()*0.9);
             Point3D center = boundingBox.getCenter();
             translate(box, center);
 
             box.setDisable(true);
 
-            box.setMaterial(boxMaterial);
+            //box.setMaterial(boxMaterial);
             //box.setDrawMode(DrawMode.LINE);
 
-            System.out.println("Adding node " + informationNode);
-            boxes.add(box);
+            boxes.add(new Oct(depth, box));
             //group.getChildren().add(box);
         });
 
-        boxes.sort(new Comparator<Box>() {
-            @Override
-            public int compare(Box o1, Box o2) {
-                return (int) (o1.getWidth() - o2.getWidth());
-            }
-        });
-        group.getChildren().addAll(boxes);
+        boxes.sort(Comparator.comparingInt(o -> o.depth));
+
+        double part =  1d / (double)maxDepth.get();
+
+        for (Oct box : boxes) {
+            double opacity = part * box.depth;
+            final PhongMaterial material = new PhongMaterial();
+
+            material.setDiffuseColor(new Color(0.1d, 0.1d, 1d - opacity, opacity/ 2d));
+            box.box.setMaterial(material);
+            group.getChildren().add(box.box);
+        }
+
     }
 
     private void translate(Shape3D box, Point3D center) {

@@ -17,7 +17,7 @@ public class Salix<T> {
 
     public Salix(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold, Metrics metrics, double minBoundingSide) {
         this.metrics = metrics;
-        root = new SalixNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold, metrics, "root", minBoundingSide);
+        root = new SalixNode<>(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), splitThreshold, metrics, "root", minBoundingSide, 0);
     }
 
     public Salix(double x1, double y1, double z1, double x2, double y2, double z2, int splitThreshold) {

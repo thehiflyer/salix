@@ -34,10 +34,12 @@ public class SalixNode<T> implements InformationNode {
 	private final String name;
 	private Box bounds;
 	private final int splitThreshold;
+	private final int depth;
 
-	public SalixNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics, String name, double minBoundingSide) {
+	public SalixNode(Point3D a, Point3D b, int splitThreshold, Metrics metrics, String name, double minBoundingSide, int depth) {
 		this.metrics = metrics;
 		this.minBoundingSide = minBoundingSide;
+		this.depth = depth;
 		bounds = new Box(a, b);
 		this.splitThreshold = splitThreshold;
 		this.name = name;
@@ -88,7 +90,7 @@ public class SalixNode<T> implements InformationNode {
 		if (octantBounds.isSphereInside(position.getX(), position.getY(), position.getZ(), entry.getRadius())) {
 			if (childNodes[octant.getIndex()] == null) {
 				metrics.onNodeChildCreationBegin();
-				childNodes[octant.getIndex()] = new SalixNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics, buildName(name, octant), minBoundingSide);
+				childNodes[octant.getIndex()] = new SalixNode<T>(octantBounds.getA(), octantBounds.getB(), splitThreshold, metrics, buildName(name, octant), minBoundingSide, depth+1);
 				metrics.onNodeChildCreationEnd();
 			}
 			childNodes[octant.getIndex()].add(entry);
@@ -154,7 +156,12 @@ public class SalixNode<T> implements InformationNode {
 		return sum;
 	}
 
-	public static final SalixNode EMPTY_NODE = new SalixNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY", 0) {
+	public static final SalixNode EMPTY_NODE = new SalixNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY", 0, 0) {
+		@Override
+		public int getDepth() {
+			return 0;
+		}
+
 		@Override
 		public int getNumberOfChildNodes() {
 			return 0;
@@ -211,6 +218,11 @@ public class SalixNode<T> implements InformationNode {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public int getDepth() {
+		return depth;
 	}
 
 	public void executeInformationVisitor(NodeVisitor nodeVisitor) {

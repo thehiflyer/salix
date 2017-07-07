@@ -4,4 +4,6 @@ public interface InformationNode {
     Box getBoundingBox();
 
     String getName();
+
+    int getDepth();
 }
