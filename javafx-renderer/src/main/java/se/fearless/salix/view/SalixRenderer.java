@@ -14,6 +14,10 @@ import javafx.scene.shape.Sphere;
 import se.fearless.salix.EntryView;
 import se.fearless.salix.Salix;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 public class SalixRenderer<T> {
     private final Salix<T> salix;
     private final Xform group = new Xform();
@@ -33,6 +37,7 @@ public class SalixRenderer<T> {
     }
 
     private void createEntryMeshes() {
+
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
@@ -65,7 +70,9 @@ public class SalixRenderer<T> {
     private void createNodesMeshes() {
         final PhongMaterial boxMaterial = new PhongMaterial();
         boxMaterial.setDiffuseColor(new Color(0.1, 0.2, 0.9, 0.005));
-        boxMaterial.setSpecularColor(Color.WHITE);
+        //boxMaterial.setSpecularColor(Color.WHITE);
+
+        List<Box> boxes = new ArrayList<>();
 
         salix.visitNodes(informationNode -> {
             se.fearless.salix.Box boundingBox = informationNode.getBoundingBox();
@@ -75,12 +82,22 @@ public class SalixRenderer<T> {
             translate(box, center);
 
             box.setDisable(true);
+
             box.setMaterial(boxMaterial);
             //box.setDrawMode(DrawMode.LINE);
 
             System.out.println("Adding node " + informationNode);
-            group.getChildren().add(box);
+            boxes.add(box);
+            //group.getChildren().add(box);
         });
+
+        boxes.sort(new Comparator<Box>() {
+            @Override
+            public int compare(Box o1, Box o2) {
+                return (int) (o1.getWidth() - o2.getWidth());
+            }
+        });
+        group.getChildren().addAll(boxes);
     }
 
     private void translate(Shape3D box, Point3D center) {

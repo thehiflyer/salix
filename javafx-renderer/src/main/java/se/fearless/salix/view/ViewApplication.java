@@ -61,7 +61,7 @@ public class ViewApplication extends Application {
 
         Salix<String> stringSalix = new Salix<>(-100, -100, -100, 100, 100, 100, 3);
         SalixRenderer<String> salixRenderer = new SalixRenderer<>(stringSalix);
-        populateTree(stringSalix, 20, -100, 100);
+        populateTree(stringSalix, 70, -100, 100);
 
         salixRenderer.updateMesh();
 
