@@ -14,113 +14,114 @@ import se.fearless.salix.Salix;
 import java.util.Random;
 
 public class ViewApplication extends Application {
-    private static final double AXIS_LENGTH = 250.0;
+	private static final double AXIS_LENGTH = 250.0;
+	private static final double CAMERA_INITIAL_DISTANCE = -450;
+	private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
+	private static final double CAMERA_INITIAL_Y_ANGLE = 320.0;
+	private static final double CAMERA_NEAR_CLIP = 0.1;
+	private static final double CAMERA_FAR_CLIP = 10000.0;
+	final Group root = new Group();
+	final Xform world = new Xform();
+	final PerspectiveCamera camera = new PerspectiveCamera(true);
+	final Xform cameraXform = new Xform();
+	final Xform cameraXform2 = new Xform();
+	final Xform cameraXform3 = new Xform();
+	final Xform axisGroup = new Xform();
+	private final BorderPane pane = new BorderPane();
+	private KeyHandler keyHandler;
 
-    private final BorderPane pane = new BorderPane();
-    final Group root = new Group();
-    final Xform world = new Xform();
+	public static void main(String[] args) {
+		launch(args);
+	}
 
-    final PerspectiveCamera camera = new PerspectiveCamera(true);
-    final Xform cameraXform = new Xform();
-    final Xform cameraXform2 = new Xform();
-    final Xform cameraXform3 = new Xform();
-    private static final double CAMERA_INITIAL_DISTANCE = -450;
-    private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
-    private static final double CAMERA_INITIAL_Y_ANGLE = 320.0;
-    private static final double CAMERA_NEAR_CLIP = 0.1;
-    private static final double CAMERA_FAR_CLIP = 10000.0;
-
-    final Xform axisGroup = new Xform();
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        // SalixMouseEventHandler salixMouseEventHandler = new SalixMouseEventHandler();
+	@Override
+	public void start(Stage stage) throws Exception {
+		// SalixMouseEventHandler salixMouseEventHandler = new SalixMouseEventHandler();
 
 
-        Scene scene = new Scene(root, 1024, 768, true);
-        scene.setFill(Color.GREY);
+		Scene scene = new Scene(root, 1024, 768, true);
+		scene.setFill(Color.GREY);
 
 //        scene.addEventHandler(MouseEvent.ANY, salixMouseEventHandler);
 
-        //pane.setCenter(salixRenderer.getNode());
+		//pane.setCenter(salixRenderer.getNode());
 
-        //scene.cursorProperty().bind(rubik.getCursor());
-        stage.setTitle("Salix View");
-        stage.setScene(scene);
+		//scene.cursorProperty().bind(rubik.getCursor());
+		stage.setTitle("Salix View");
+		stage.setScene(scene);
 
-        buildCamera();
-        buildAxes();
+		buildCamera();
+		buildAxes();
 
 
-        scene.setCamera(camera);
-        root.getChildren().addAll(world);
+		scene.setCamera(camera);
+		root.getChildren().addAll(world);
 
-        Salix<String> stringSalix = new Salix<>(-1024, -1024, -1024, 1024, 1024, 1024, 3);
-        SalixRenderer<String> salixRenderer = new SalixRenderer<>(stringSalix);
-        populateTree(stringSalix, 1000, -1000, 1000);
+		Salix<String> stringSalix = new Salix<>(-100, -100, -100, 100, 100, 100, 3);
+		SalixRenderer<String> salixRenderer = new SalixRenderer<>(stringSalix);
+		populateTree(stringSalix, 120, -100, 100);
 
-        salixRenderer.updateMesh();
+		salixRenderer.updateMesh();
 
-        root.getChildren().add(salixRenderer.getNode());
+		root.getChildren().add(salixRenderer.getNode());
 
-        MouseHandler mouseHandler = new MouseHandler(camera, cameraXform, cameraXform2);
-        mouseHandler.handleMouse(scene);
-        stage.show();
-    }
+		MouseHandler mouseHandler = new MouseHandler(camera, cameraXform, cameraXform2);
+		mouseHandler.handleMouse(scene);
 
-    private void buildCamera() {
-        root.getChildren().add(cameraXform);
-        cameraXform.getChildren().add(cameraXform2);
-        cameraXform2.getChildren().add(cameraXform3);
-        cameraXform3.getChildren().add(camera);
-        cameraXform3.setRotateZ(180.0);
+		KeyHandler keyHandler = new KeyHandler(salixRenderer);
+		keyHandler.handleKeyPresses(scene);
+		stage.show();
+	}
 
-        camera.setNearClip(CAMERA_NEAR_CLIP);
-        camera.setFarClip(CAMERA_FAR_CLIP);
-        camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
-        cameraXform.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
-        cameraXform.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
-    }
+	private void buildCamera() {
+		root.getChildren().add(cameraXform);
+		cameraXform.getChildren().add(cameraXform2);
+		cameraXform2.getChildren().add(cameraXform3);
+		cameraXform3.getChildren().add(camera);
+		cameraXform3.setRotateZ(180.0);
 
-    private void buildAxes() {
-        final PhongMaterial redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(Color.DARKRED);
-        redMaterial.setSpecularColor(Color.RED);
+		camera.setNearClip(CAMERA_NEAR_CLIP);
+		camera.setFarClip(CAMERA_FAR_CLIP);
+		camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
+		cameraXform.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
+		cameraXform.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
+	}
 
-        final PhongMaterial greenMaterial = new PhongMaterial();
-        greenMaterial.setDiffuseColor(Color.DARKGREEN);
-        greenMaterial.setSpecularColor(Color.GREEN);
+	private void buildAxes() {
+		final PhongMaterial redMaterial = new PhongMaterial();
+		redMaterial.setDiffuseColor(Color.DARKRED);
+		redMaterial.setSpecularColor(Color.RED);
 
-        final PhongMaterial blueMaterial = new PhongMaterial();
-        blueMaterial.setDiffuseColor(Color.DARKBLUE);
-        blueMaterial.setSpecularColor(Color.BLUE);
+		final PhongMaterial greenMaterial = new PhongMaterial();
+		greenMaterial.setDiffuseColor(Color.DARKGREEN);
+		greenMaterial.setSpecularColor(Color.GREEN);
 
-        final Box xAxis = new Box(AXIS_LENGTH, 1, 1);
-        final Box yAxis = new Box(1, AXIS_LENGTH, 1);
-        final Box zAxis = new Box(1, 1, AXIS_LENGTH);
+		final PhongMaterial blueMaterial = new PhongMaterial();
+		blueMaterial.setDiffuseColor(Color.DARKBLUE);
+		blueMaterial.setSpecularColor(Color.BLUE);
 
-        xAxis.setMaterial(redMaterial);
-        yAxis.setMaterial(greenMaterial);
-        zAxis.setMaterial(blueMaterial);
+		final Box xAxis = new Box(AXIS_LENGTH, 1, 1);
+		final Box yAxis = new Box(1, AXIS_LENGTH, 1);
+		final Box zAxis = new Box(1, 1, AXIS_LENGTH);
 
-        axisGroup.getChildren().addAll(xAxis, yAxis, zAxis);
-        axisGroup.setVisible(true);
-        world.getChildren().addAll(axisGroup);
-    }
+		xAxis.setMaterial(redMaterial);
+		yAxis.setMaterial(greenMaterial);
+		zAxis.setMaterial(blueMaterial);
 
-    public void populateTree(Salix<String> salix, int qty, int minXtent, int maxXtent) throws Exception {
-        Random random = new Random(1234);
-        for (int i = 0; i < qty; i++) {
-            salix.add("" + i, getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), random.nextInt(20));
-        }
+		axisGroup.getChildren().addAll(xAxis, yAxis, zAxis);
+		axisGroup.setVisible(true);
+		world.getChildren().addAll(axisGroup);
+	}
 
-    }
+	public void populateTree(Salix<String> salix, int qty, int minXtent, int maxXtent) throws Exception {
+		Random random = new Random(1234);
+		for (int i = 0; i < qty; i++) {
+			salix.add("" + i, getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), random.nextInt(20));
+		}
 
-    private int getRandom(Random random, int minXtent, int maxXtent) {
-        return random.nextInt(2*maxXtent) + minXtent;
-    }
+	}
+
+	private int getRandom(Random random, int minXtent, int maxXtent) {
+		return random.nextInt(2 * maxXtent) + minXtent;
+	}
 }

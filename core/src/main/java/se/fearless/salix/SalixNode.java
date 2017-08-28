@@ -156,12 +156,7 @@ public class SalixNode<T> implements InformationNode {
 		return sum;
 	}
 
-	public static final SalixNode EMPTY_NODE = new SalixNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY", 0, 0) {
-		@Override
-		public int getDepth() {
-			return 0;
-		}
-
+	public static final SalixNode EMPTY_NODE = new SalixNode(new Point3D(0, 0, 0), new Point3D(0, 0, 0), 0, new NoOpMetrics(), "EMPTY", 0, -1) {
 		@Override
 		public int getNumberOfChildNodes() {
 			return 0;
