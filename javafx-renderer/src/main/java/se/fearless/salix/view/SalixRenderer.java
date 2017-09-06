@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SalixRenderer<T> {
     private final Salix<T> salix;
     private final Xform group = new Xform();
+    private int currentDepth = 0;
 
 
     public SalixRenderer(Salix<T> salix) {
@@ -89,20 +90,23 @@ public class SalixRenderer<T> {
         AtomicInteger maxDepth = new AtomicInteger();
         salix.visitNodes(informationNode -> {
             int depth = informationNode.getDepth();
-            maxDepth.set(Math.max(maxDepth.get(), depth));
-            se.fearless.salix.Box boundingBox = informationNode.getBoundingBox();
-            Point3D size = boundingBox.getB().subtract(boundingBox.getA());
-            final Box box = new Box(size.getX()-1*0.9, size.getY()*0.9, size.getZ()*0.9);
-            Point3D center = boundingBox.getCenter();
-            translate(box, center);
 
-            box.setDisable(true);
+	        if (depth >= currentDepth) {
+		        maxDepth.set(Math.max(maxDepth.get(), depth));
+		        se.fearless.salix.Box boundingBox = informationNode.getBoundingBox();
+		        Point3D size = boundingBox.getB().subtract(boundingBox.getA());
+		        final Box box = new Box(size.getX()-1*0.9, size.getY()*0.9, size.getZ()*0.9);
+		        Point3D center = boundingBox.getCenter();
+		        translate(box, center);
 
-            //box.setMaterial(boxMaterial);
-            //box.setDrawMode(DrawMode.LINE);
+		        box.setDisable(true);
 
-            boxes.add(new Oct(depth, box));
-            //group.getChildren().add(box);
+		        //box.setMaterial(boxMaterial);
+		        //box.setDrawMode(DrawMode.LINE);
+
+		        boxes.add(new Oct(depth, box));
+		        //group.getChildren().add(box);
+	        }
         });
 
         boxes.sort(Comparator.comparingInt(o -> o.depth));
@@ -131,4 +135,14 @@ public class SalixRenderer<T> {
     }
 
 
+	public void increaseDepth() {
+		currentDepth++;
+		updateMesh();
+	}
+
+
+	public void decreaseDepth() {
+		currentDepth = Math.max(0, currentDepth - 1);
+		updateMesh();
+	}
 }

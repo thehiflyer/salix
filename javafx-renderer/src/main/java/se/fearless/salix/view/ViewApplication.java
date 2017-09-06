@@ -20,15 +20,14 @@ public class ViewApplication extends Application {
 	private static final double CAMERA_INITIAL_Y_ANGLE = 320.0;
 	private static final double CAMERA_NEAR_CLIP = 0.1;
 	private static final double CAMERA_FAR_CLIP = 10000.0;
-	final Group root = new Group();
-	final Xform world = new Xform();
-	final PerspectiveCamera camera = new PerspectiveCamera(true);
-	final Xform cameraXform = new Xform();
-	final Xform cameraXform2 = new Xform();
-	final Xform cameraXform3 = new Xform();
-	final Xform axisGroup = new Xform();
+	private final Group root = new Group();
+	private final Xform world = new Xform();
+	private final PerspectiveCamera camera = new PerspectiveCamera(true);
+	private final Xform cameraXform = new Xform();
+	private final Xform cameraXform2 = new Xform();
+	private final Xform cameraXform3 = new Xform();
+	private final Xform axisGroup = new Xform();
 	private final BorderPane pane = new BorderPane();
-	private KeyHandler keyHandler;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -36,17 +35,11 @@ public class ViewApplication extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		// SalixMouseEventHandler salixMouseEventHandler = new SalixMouseEventHandler();
 
 
 		Scene scene = new Scene(root, 1024, 768, true);
 		scene.setFill(Color.GREY);
 
-//        scene.addEventHandler(MouseEvent.ANY, salixMouseEventHandler);
-
-		//pane.setCenter(salixRenderer.getNode());
-
-		//scene.cursorProperty().bind(rubik.getCursor());
 		stage.setTitle("Salix View");
 		stage.setScene(scene);
 
@@ -113,7 +106,7 @@ public class ViewApplication extends Application {
 		world.getChildren().addAll(axisGroup);
 	}
 
-	public void populateTree(Salix<String> salix, int qty, int minXtent, int maxXtent) throws Exception {
+	private void populateTree(Salix<String> salix, int qty, int minXtent, int maxXtent) throws Exception {
 		Random random = new Random(1234);
 		for (int i = 0; i < qty; i++) {
 			salix.add("" + i, getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), getRandom(random, minXtent, maxXtent), random.nextInt(20));
