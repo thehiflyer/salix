@@ -50,9 +50,9 @@ public class ViewApplication extends Application {
 		scene.setCamera(camera);
 		root.getChildren().addAll(world);
 
-		Salix<String> stringSalix = new Salix<>(-100, -100, -100, 100, 100, 100, 3);
+		Salix<String> stringSalix = new Salix<>(-1000, -1000, -1000, 1000, 1000, 1000, 3);
 		SalixRenderer<String> salixRenderer = new SalixRenderer<>(stringSalix);
-		populateTree(stringSalix, 120, -100, 100);
+		populateTree(stringSalix, 600, -1000, 1000);
 
 		salixRenderer.updateMesh();
 

@@ -95,7 +95,7 @@ public class SalixRenderer<T> {
 		        maxDepth.set(Math.max(maxDepth.get(), depth));
 		        se.fearless.salix.Box boundingBox = informationNode.getBoundingBox();
 		        Point3D size = boundingBox.getB().subtract(boundingBox.getA());
-		        final Box box = new Box(size.getX()-1*0.9, size.getY()*0.9, size.getZ()*0.9);
+		        final Box box = new Box(size.getX(), size.getY(), size.getZ());
 		        Point3D center = boundingBox.getCenter();
 		        translate(box, center);
 
