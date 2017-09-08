@@ -2,6 +2,7 @@ package se.fearless.salix;
 
 import com.google.common.collect.Iterables;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.fearless.salix.metrics.CountingMetrics;
 
@@ -131,6 +132,7 @@ public class SalixTest {
 	}
 
 	@Test
+	@Ignore("slow test")
 	public void populateComplexity() throws Exception {
 		long init = System.nanoTime();
 

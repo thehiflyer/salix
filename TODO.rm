@@ -1,0 +1,4 @@
+* Add more metrics to analyze why adding is slow
+* Remove empty nodes
+* Visualize moving entities
+* Multi threaded add/read
